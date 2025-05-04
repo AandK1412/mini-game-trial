@@ -1,14 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Yeonmi Platformer</title>
+    <meta charset="UTF-8">
+    <title>Escape Across the Frozen River</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #0a1a2f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #gameContainer {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #gameCanvas {
+            border: 2px solid #fff;
+        }
+        #narrative {
+            flex: 1;
+            padding: 30px;
+            background: linear-gradient(to bottom, #102030, #204060);
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+        p {
+            line-height: 1.6;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+    </div>
+    <div id="narrative">
+        <h2>🌨 Narrative: Escape Across the Frozen River</h2>
+        <p>Under the cloak of a cold winter night, Yeonmi and her mother stand at the edge of the Yalu River, the border between North Korea and China. The river stretches out before them like a frozen sheet of steel, reflecting the pale glow of the moon. Snow drifts quietly through the air, each flake whispering a reminder of the risk they are about to take.</p>
+        <p>Behind them, the darkness of their homeland looms — a place of hardship, hunger, and silence. Ahead, the uncertain promise of freedom waits on the other shore. Every step across the ice is a gamble: guards could spot them, the river could crack beneath their feet, or the biting cold could slow their movements enough to cost them their escape.</p>
+        <p>In this moment, there is no turning back. Yeonmi, only a young girl, clutches her mother’s hand tightly. Her small frame shivers, but her eyes hold a flicker of determination beyond her years. Beside her, her mother carries the weight of survival, her face set in quiet resolve. Together, they begin to move, step by careful step, across the treacherous river.</p>
+        <p>The snowflakes swirl in the night air, masking their outlines but also muffling their steps. Time seems to slow as they inch forward, guided only by the hope that life on the other side holds more than the oppression they leave behind.</p>
+        <p>This scene is not just about a physical journey — it’s about resilience, courage, and the desperate pursuit of human dignity. Their crossing, like that of thousands of others, is a stark reminder of the lengths to which people will go in search of freedom.</p>
+    </div>
 </body>
 </html>
