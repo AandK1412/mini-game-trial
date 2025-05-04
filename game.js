@@ -26,8 +26,8 @@ let currentChapter = 1;
 let chapterBackground = "#002244";
 
 const players = [
-    { x: 100, y: 318, speed: 2, sprite: girlSprite },
-    { x: 140, y: 318, speed: 2, sprite: motherSprite }
+    { x: 70, y: 318, speed: 2, sprite: girlSprite },
+    { x: 70, y: 318, speed: 2, sprite: motherSprite }
 ];
 
 const snowflakes = Array.from({ length: 50 }, () => ({
