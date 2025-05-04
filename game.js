@@ -17,16 +17,14 @@ backgrounds[2].src = "assets/chapter2.png";
 backgrounds[3].src = "assets/chapter3.png";
 backgrounds[4].src = "assets/chapter4.png";
 
-
-
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// Use correct frame sizes (check your sprite sheets)
-const spriteWidth = 32;
-const spriteHeight = 32;
+// Adjusted sprite sizes to better fit
+const spriteWidth = 40;  // Increased width
+const spriteHeight = 40; // Increased height
 const scale = 2;
 const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;  
@@ -134,7 +132,6 @@ function loadChapter(chapter) {
     narrativeContainer.innerHTML = `<h2>${c.title}</h2><p>${c.text}</p><h3>📌 Info</h3>${c.info}`;
     showBanner(c.title);
 }
-
 
 function showBanner(text) {
     chapterBanner.textContent = text;
