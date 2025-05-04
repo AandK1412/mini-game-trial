@@ -11,6 +11,8 @@ let player = {
   height: 30,
   color: "red",
   dy: 0,
+  dx: 0,
+  speed: 5,
   gravity: 1,
   jumpPower: -15,
   grounded: false
@@ -22,6 +24,14 @@ document.addEventListener("keydown", (e) => keys[e.code] = true);
 document.addEventListener("keyup", (e) => keys[e.code] = false);
 
 function update() {
+  // Left/right movement
+  if (keys["ArrowLeft"]) {
+    player.x -= player.speed;
+  }
+  if (keys["ArrowRight"]) {
+    player.x += player.speed;
+  }
+
   // Gravity
   player.dy += player.gravity;
   player.y += player.dy;
@@ -38,6 +48,10 @@ function update() {
     player.dy = player.jumpPower;
     player.grounded = false;
   }
+
+  // Prevent going out of bounds
+  if (player.x < 0) player.x = 0;
+  if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
 
 function draw() {
