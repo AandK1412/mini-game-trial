@@ -6,6 +6,16 @@ const chapterBanner = document.getElementById('chapterBanner');
 canvas.width = 800;
 canvas.height = 400;
 
+const backgrounds = {
+    2: new Image(),
+    3: new Image(),
+    4: new Image()
+};
+backgrounds[2].src = "assets/chapter2.png";
+backgrounds[3].src = "assets/chapter3.png";
+backgrounds[4].src = "assets/chapter4.png";
+
+
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
