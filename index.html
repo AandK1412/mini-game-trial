@@ -19,10 +19,12 @@
       top: 20px;
       right: 20px;
       width: 30%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 15px;
       border-radius: 10px;
+      max-height: 90%;
+      overflow-y: auto;
     }
     #chapterBanner {
       position: absolute;
@@ -36,6 +38,7 @@
       font-size: 24px;
       opacity: 0;
       transition: opacity 1s, top 1s;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -45,6 +48,7 @@
   <div id="narrativeContainer"></div>
   <div id="chapterBanner"></div>
 
+  <!-- Make sure assets like girl-sprite.png, mother-sprite.png, and chapter2-bg.png are in the assets/ folder -->
   <script src="game.js"></script>
 </body>
 </html>
