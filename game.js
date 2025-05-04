@@ -5,17 +5,19 @@ canvas.width = 800;
 canvas.height = 400;
 
 let player = {
-  x: 50,
+  x: 100,
   y: 300,
-  width: 30,
-  height: 30,
-  color: "red",
-  dy: 0,
-  dx: 0,
-  speed: 5,
-  gravity: 1,
-  jumpPower: -15,
-  grounded: false
+  width: 20,
+  height: 40,
+  color: "pink" // little girl
+};
+
+let companion = {
+  x: 130,
+  y: 300,
+  width: 25,
+  height: 50,
+  color: "purple" // woman
 };
 
 let keys = {};
@@ -24,46 +26,44 @@ document.addEventListener("keydown", (e) => keys[e.code] = true);
 document.addEventListener("keyup", (e) => keys[e.code] = false);
 
 function update() {
-  // Left/right movement
+  // Move both left/right
   if (keys["ArrowLeft"]) {
-    player.x -= player.speed;
+    player.x -= 3;
+    companion.x -= 3;
   }
   if (keys["ArrowRight"]) {
-    player.x += player.speed;
-  }
-
-  // Gravity
-  player.dy += player.gravity;
-  player.y += player.dy;
-
-  // Ground collision
-  if (player.y + player.height >= canvas.height) {
-    player.y = canvas.height - player.height;
-    player.dy = 0;
-    player.grounded = true;
-  }
-
-  // Jump
-  if (keys["Space"] && player.grounded) {
-    player.dy = player.jumpPower;
-    player.grounded = false;
+    player.x += 3;
+    companion.x += 3;
   }
 
   // Prevent going out of bounds
-  if (player.x < 0) player.x = 0;
-  if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+  player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+  companion.x = Math.max(0, Math.min(canvas.width - companion.width, companion.x));
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawBackground() {
+  // Night sky
+  ctx.fillStyle = "#0b1d26";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Frozen river
+  ctx.fillStyle = "#8ecae6";
+  ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+}
+
+function drawCharacters() {
   ctx.fillStyle = player.color;
-  ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.fillRect(player.x, player.y - player.height, player.width, player.height);
+
+  ctx.fillStyle = companion.color;
+  ctx.fillRect(companion.x, companion.y - companion.height, companion.width, companion.height);
 }
 
-function loop() {
+function gameLoop() {
   update();
-  draw();
-  requestAnimationFrame(loop);
+  drawBackground();
+  drawCharacters();
+  requestAnimationFrame(gameLoop);
 }
 
-loop();
+gameLoop();
