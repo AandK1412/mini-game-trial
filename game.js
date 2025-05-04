@@ -194,13 +194,15 @@ function update() {
 }
 
 function draw() {
-    if (currentChapter === 2 && chapter2BackgroundImage.complete && chapter2BackgroundImage.naturalHeight !== 0) {
-        ctx.drawImage(chapter2BackgroundImage, 0, 0, canvas.width, canvas.height);
+    // Draw background image if available for chapters 2, 3, 4
+    if (currentChapter >= 2 && backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
+        ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
     } else {
         ctx.fillStyle = chapterBackground;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
+    // Snow for chapter 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -210,7 +212,9 @@ function draw() {
         });
     }
 
+    // Chapter-specific ground
     if (currentChapter === 2) {
+        // Cracked ground
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 2;
         for (let i = 0; i < canvas.width; i += 50) {
@@ -225,6 +229,7 @@ function draw() {
             ctx.stroke();
         }
     } else if (currentChapter === 3) {
+        // Sand ground
         ctx.fillStyle = "#C2B280";
         ctx.fillRect(0, 350, canvas.width, 50);
         ctx.fillStyle = "#D2B48C";
@@ -234,14 +239,19 @@ function draw() {
             ctx.fill();
         }
     } else {
+        // Ice ground for chapter 1
         ctx.fillStyle = "#89c2d9";
         ctx.fillRect(0, 350, canvas.width, 50);
     }
 
-    ctx.fillStyle = "#495057";
-    ctx.fillRect(0, 330, 50, 70);
-    ctx.fillRect(canvas.width - 50, 330, 50, 70);
+    // Only draw river banks in chapter 1
+    if (currentChapter === 1) {
+        ctx.fillStyle = "#495057";
+        ctx.fillRect(0, 330, 50, 70);
+        ctx.fillRect(canvas.width - 50, 330, 50, 70);
+    }
 
+    // Draw characters
     players.forEach(p => {
         ctx.drawImage(
             p.sprite,
@@ -256,6 +266,7 @@ function draw() {
         );
     });
 
+    // Hiding overlay for chapter 2
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -264,6 +275,7 @@ function draw() {
         ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
     }
 
+    // Stamina bar for chapter 3
     if (currentChapter === 3) {
         ctx.fillStyle = "#444";
         ctx.fillRect(20, 20, 200, 20);
