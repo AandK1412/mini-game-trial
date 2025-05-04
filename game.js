@@ -6,14 +6,11 @@ const chapterBanner = document.getElementById('chapterBanner');
 canvas.width = 800;
 canvas.height = 400;
 
-// Load sprite images
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
-
 const motherSprite = new Image();
-motherSprite.src = "assets/mother-sprite.png"; // <-- you should provide this sprite or reuse girl sprite
+motherSprite.src = "assets/mother-sprite.png";
 
-// Sprite setup
 const spriteWidth = 32;
 const spriteHeight = 32;
 const scale = 2;
@@ -26,8 +23,8 @@ let frameTimer = 0;
 const frameSpeed = 10;
 let direction = 0;
 let currentChapter = 1;
+let chapterBackground = "#002244";
 
-// Characters
 const players = [
     { x: 100, y: 318, speed: 2, sprite: girlSprite },
     { x: 140, y: 318, speed: 2, sprite: motherSprite }
@@ -41,27 +38,47 @@ const snowflakes = Array.from({ length: 50 }, () => ({
     speed: Math.random() * 1 + 0.5
 }));
 
-// Keys
-const keys = {};
-document.addEventListener("keydown", e => keys[e.key] = true);
-document.addEventListener("keyup", e => keys[e.key] = false);
+// Mechanics
+let isHiding = false;
+let hideCooldown = 0;
+let stamina = 100;
+let maxStamina = 100;
+let staminaDepletionRate = 0.3;
+let staminaRegenRate = 0.1;
 
-// Initialize narrative
+const keys = {};
+document.addEventListener("keydown", e => {
+    keys[e.key] = true;
+    if (e.key === " ") {
+        if (currentChapter === 2 && hideCooldown <= 0) {
+            isHiding = !isHiding;
+            hideCooldown = 20;
+        }
+    }
+});
+document.addEventListener("keyup", e => {
+    keys[e.key] = false;
+});
+
 loadChapter(currentChapter);
 
 function loadChapter(chapter) {
     if (chapter === 1) {
-        narrativeContainer.innerHTML = `
-            <h2>❄ Chapter 1: Escape Across the Frozen River</h2>
-            <p>Under the cloak of a cold winter night, Yeonmi and her mother stand at the edge of the Yalu River, the border between North Korea and China...</p>
-        `;
+        chapterBackground = "#002244";
+        narrativeContainer.innerHTML = `<h2>❄ Chapter 1: Escape</h2><p>Crossing the frozen Yalu River...</p>`;
         showBanner('Chapter 1: Escape');
     } else if (chapter === 2) {
-        narrativeContainer.innerHTML = `
-            <h2>🌄 Chapter 2: Crossing Into China</h2>
-            <p>They’ve crossed the ice and now face a new land of danger and uncertainty...</p>
-        `;
-        showBanner('Chapter 2: China');
+        chapterBackground = "#333300";
+        narrativeContainer.innerHTML = `<h2>🏚 Chapter 2: Hiding in China</h2><p>Hiding from patrols and traffickers...</p>`;
+        showBanner('Chapter 2: Hiding');
+    } else if (chapter === 3) {
+        chapterBackground = "#663300";
+        narrativeContainer.innerHTML = `<h2>🏜 Chapter 3: Gobi Desert</h2><p>Crossing the desert at night...</p>`;
+        showBanner('Chapter 3: Desert');
+    } else if (chapter === 4) {
+        chapterBackground = "#336600";
+        narrativeContainer.innerHTML = `<h2>🏁 Chapter 4: Mongolia</h2><p>Final test at the border...</p>`;
+        showBanner('Chapter 4: Freedom');
     }
 }
 
@@ -101,9 +118,23 @@ function update() {
 
     if (players[0].x + displayWidth >= canvas.width) {
         currentChapter++;
-        if (currentChapter > 2) currentChapter = 1;
+        if (currentChapter > 4) currentChapter = 1;
         players.forEach(p => p.x = 0);
+        stamina = 100;
+        isHiding = false;
         loadChapter(currentChapter);
+    }
+
+    if (currentChapter === 2 && hideCooldown > 0) hideCooldown--;
+
+    if (currentChapter === 3) {
+        if (keys["ArrowRight"] || keys["ArrowLeft"]) {
+            stamina -= staminaDepletionRate;
+            stamina = Math.max(0, stamina);
+        } else {
+            stamina += staminaRegenRate;
+            stamina = Math.min(maxStamina, stamina);
+        }
     }
 
     if (moved) {
@@ -126,22 +157,20 @@ function update() {
 }
 
 function draw() {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#001d3d");
-    gradient.addColorStop(1, "#003566");
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = chapterBackground;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#fff";
-    snowflakes.forEach(snow => {
-        ctx.beginPath();
-        ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-        ctx.fill();
-    });
+    if (currentChapter === 1 || currentChapter === 3) {
+        ctx.fillStyle = "#fff";
+        snowflakes.forEach(snow => {
+            ctx.beginPath();
+            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
 
     ctx.fillStyle = "#89c2d9";
     ctx.fillRect(0, 350, canvas.width, 50);
-
     ctx.fillStyle = "#495057";
     ctx.fillRect(0, 330, 50, 70);
     ctx.fillRect(canvas.width - 50, 330, 50, 70);
@@ -159,6 +188,23 @@ function draw() {
             displayHeight
         );
     });
+
+    if (currentChapter === 2 && isHiding) {
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#fff";
+        ctx.font = "20px Arial";
+        ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
+    }
+
+    if (currentChapter === 3) {
+        ctx.fillStyle = "#444";
+        ctx.fillRect(20, 20, 200, 20);
+        ctx.fillStyle = "#0f0";
+        ctx.fillRect(20, 20, 200 * (stamina / maxStamina), 20);
+        ctx.strokeStyle = "#fff";
+        ctx.strokeRect(20, 20, 200, 20);
+    }
 }
 
 gameLoop();
