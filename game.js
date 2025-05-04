@@ -196,6 +196,7 @@ function draw() {
     ctx.fillStyle = chapterBackground;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Snow for chapters 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -205,12 +206,46 @@ function draw() {
         });
     }
 
-    ctx.fillStyle = "#89c2d9";
-    ctx.fillRect(0, 350, canvas.width, 50);
-    ctx.fillStyle = "#495057";
-    ctx.fillRect(0, 330, 50, 70);
-    ctx.fillRect(canvas.width - 50, 330, 50, 70);
+    // Ground drawing per chapter
+    if (currentChapter === 2) {
+        // Cracked ground (China)
+        ctx.fillStyle = "#8B0000";  // dark red
+        ctx.fillRect(0, 350, canvas.width, 50);
+        ctx.strokeStyle = "#000";  // cracks
+        ctx.lineWidth = 2;
+        for (let i = 0; i < canvas.width; i += 50) {
+            ctx.beginPath();
+            ctx.moveTo(i, 350);
+            ctx.lineTo(i + 10, 400);
+            ctx.stroke();
 
+            ctx.beginPath();
+            ctx.moveTo(i + 25, 350);
+            ctx.lineTo(i + 35, 400);
+            ctx.stroke();
+        }
+    } else if (currentChapter === 3) {
+        // Sand ground (Gobi Desert)
+        ctx.fillStyle = "#C2B280";  // sandy color
+        ctx.fillRect(0, 350, canvas.width, 50);
+        ctx.fillStyle = "#D2B48C";  // lighter sand dunes
+        for (let i = 0; i < canvas.width; i += 40) {
+            ctx.beginPath();
+            ctx.arc(i + 20, 350, 10, 0, Math.PI, true);
+            ctx.fill();
+        }
+    } else {
+        // Default ice ground (chapter 1, chapter 4)
+        ctx.fillStyle = "#89c2d9";
+        ctx.fillRect(0, 350, canvas.width, 50);
+    }
+
+    // Side banks (fixed for all chapters)
+    ctx.fillStyle = "#495057";
+    ctx.fillRect(0, 330, 50, 70);  // left bank
+    ctx.fillRect(canvas.width - 50, 330, 50, 70);  // right bank
+
+    // Draw players
     players.forEach(p => {
         ctx.drawImage(
             p.sprite,
@@ -225,39 +260,25 @@ function draw() {
         );
     });
 
-  if (currentChapter === 2) {
-    // Cracked ground (China)
-    ctx.fillStyle = "#8B0000";  // dark red
-    ctx.fillRect(0, 350, canvas.width, 50);
-    ctx.strokeStyle = "#000";  // cracks
-    ctx.lineWidth = 2;
-    for (let i = 0; i < canvas.width; i += 50) {
-        ctx.beginPath();
-        ctx.moveTo(i, 350);
-        ctx.lineTo(i + 10, 400);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(i + 25, 350);
-        ctx.lineTo(i + 35, 400);
-        ctx.stroke();
+    // Hiding overlay
+    if (currentChapter === 2 && isHiding) {
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#fff";
+        ctx.font = "20px Arial";
+        ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
     }
-} else if (currentChapter === 3) {
-    // Sand ground (Gobi Desert)
-    ctx.fillStyle = "#C2B280";  // sandy color
-    ctx.fillRect(0, 350, canvas.width, 50);
 
-    // optional: draw small sand dunes
-    ctx.fillStyle = "#D2B48C";  // lighter sand
-    for (let i = 0; i < canvas.width; i += 40) {
-        ctx.beginPath();
-        ctx.arc(i + 20, 350, 10, 0, Math.PI, true);
-        ctx.fill();
+    // Stamina bar
+    if (currentChapter === 3) {
+        ctx.fillStyle = "#444";
+        ctx.fillRect(20, 20, 200, 20);
+        ctx.fillStyle = "#0f0";
+        ctx.fillRect(20, 20, 200 * (stamina / maxStamina), 20);
+        ctx.strokeStyle = "#fff";
+        ctx.strokeRect(20, 20, 200, 20);
     }
-} else {
-    // Default ice ground
-    ctx.fillStyle = "#89c2d9";
-    ctx.fillRect(0, 350, canvas.width, 50);
 }
+
 
 gameLoop();
