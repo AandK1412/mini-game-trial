@@ -10,20 +10,20 @@ girlSprite.src = "assets/girl-sprite.png";
 // Sprite setup
 const spriteWidth = 32;
 const spriteHeight = 32;
+const scale = 2; // make it 2x larger
+const displayWidth = spriteWidth * scale;
+const displayHeight = spriteHeight * scale;
 let frameIndex = 0;
 const frameCount = 3;
 let frameTimer = 0;
 const frameSpeed = 10;
 let direction = 0; // 0 = idle, 1 = left, 2 = right
 
-// Player object
-const player = {
-    x: 100,
-    y: 300,
-    width: spriteWidth,
-    height: spriteHeight,
-    speed: 2
-};
+// Player objects (girl + mother)
+const players = [
+    { x: 100, y: 318, speed: 2 },
+    { x: 140, y: 318, speed: 2 }
+];
 
 // Snow particles
 const snowflakes = Array.from({ length: 50 }, () => ({
@@ -50,25 +50,33 @@ function gameLoop() {
 }
 
 function update() {
-    // Player movement
+    let moved = false;
     if (keys["ArrowLeft"]) {
-        player.x -= player.speed;
+        players.forEach(p => p.x -= p.speed);
         direction = 1;
+        moved = true;
     } else if (keys["ArrowRight"]) {
-        player.x += player.speed;
+        players.forEach(p => p.x += p.speed);
         direction = 2;
+        moved = true;
     } else {
         direction = 0;
     }
 
-    // Keep player in bounds
-    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+    // Keep players in bounds
+    players.forEach(p => {
+        p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
+    });
 
-    // Animate sprite
-    frameTimer++;
-    if (frameTimer >= frameSpeed) {
-        frameTimer = 0;
-        frameIndex = (frameIndex + 1) % frameCount;
+    // Animate sprite only when moving
+    if (moved) {
+        frameTimer++;
+        if (frameTimer >= frameSpeed) {
+            frameTimer = 0;
+            frameIndex = (frameIndex + 1) % frameCount;
+        }
+    } else {
+        frameIndex = 1; // middle idle frame
     }
 
     // Update snow
@@ -89,10 +97,6 @@ function draw() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw river (ice)
-    ctx.fillStyle = "#89c2d9";
-    ctx.fillRect(0, 350, canvas.width, 50);
-
     // Draw snowflakes
     ctx.fillStyle = "#fff";
     snowflakes.forEach(snow => {
@@ -101,19 +105,30 @@ function draw() {
         ctx.fill();
     });
 
-    // Draw player sprite
-    ctx.drawImage(
-        girlSprite,
-        frameIndex * spriteWidth,       // source x
-        direction * spriteHeight,      // source y
-        spriteWidth,                   // source width
-        spriteHeight,                  // source height
-        player.x,                      // destination x
-        player.y,                      // destination y
-        spriteWidth,                   // destination width
-        spriteHeight                   // destination height
-    );
+    // Draw river (ice ground)
+    ctx.fillStyle = "#89c2d9";
+    ctx.fillRect(0, 350, canvas.width, 50);
+
+    // Draw land on both sides
+    ctx.fillStyle = "#495057";
+    ctx.fillRect(0, 330, 50, 70); // left bank
+    ctx.fillRect(canvas.width - 50, 330, 50, 70); // right bank
+
+    // Draw players
+    players.forEach(p => {
+        ctx.drawImage(
+            girlSprite,
+            frameIndex * spriteWidth,
+            direction * spriteHeight,
+            spriteWidth,
+            spriteHeight,
+            p.x,
+            p.y,
+            displayWidth,
+            displayHeight
+        );
+    });
 }
 
-// Start the game
+// Start game
 gameLoop();
