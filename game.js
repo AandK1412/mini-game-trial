@@ -30,7 +30,6 @@ const players = [
     { x: 140, y: 318, speed: 2, sprite: motherSprite }
 ];
 
-// Snow particles
 const snowflakes = Array.from({ length: 50 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -38,13 +37,12 @@ const snowflakes = Array.from({ length: 50 }, () => ({
     speed: Math.random() * 1 + 0.5
 }));
 
-// Mechanics
 let isHiding = false;
 let hideCooldown = 0;
 let stamina = 100;
-let maxStamina = 100;
-let staminaDepletionRate = 0.3;
-let staminaRegenRate = 0.1;
+const maxStamina = 100;
+const staminaDepletionRate = 0.3;
+const staminaRegenRate = 0.1;
 
 const keys = {};
 document.addEventListener("keydown", e => {
@@ -63,57 +61,61 @@ document.addEventListener("keyup", e => {
 loadChapter(currentChapter);
 
 function loadChapter(chapter) {
-    if (chapter === 1) {
-        chapterBackground = "#002244";
-        narrativeContainer.innerHTML = `
-            <h2>❄ Chapter 1: Escape Across the Frozen River</h2>
-            <p>The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River. Behind them, the familiar shadows of home; ahead, a frozen no-man’s land. Guards patrol nearby, their boots crunching on snow. Every crack of ice feels like a gunshot in the silence. Yeonmi grips her mother’s hand, her heart racing — they have only one chance.</p>
-            <h3>📌 Info</h3>
-            <ul>
+    const chapterData = [
+        {
+            bg: "#002244",
+            title: "❄ Chapter 1: Escape Across the Frozen River",
+            text: `The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River. 
+            Behind them, the familiar shadows of home; ahead, a frozen no-man’s land. Guards patrol nearby, their boots crunching on snow. 
+            Every crack of ice feels like a gunshot in the silence. Yeonmi grips her mother’s hand, her heart racing — they have only one chance.`,
+            info: `<ul>
                 <li>The Yalu River is about 800 km long and serves as a natural border between North Korea and China.</li>
                 <li>Many defectors cross at night to avoid detection, often without guides or proper equipment.</li>
                 <li>Falling into the freezing water can mean hypothermia or death within minutes.</li>
-            </ul>`;
-        showBanner('Chapter 1: Escape');
-    } else if (chapter === 2) {
-        chapterBackground = "#333300";
-        narrativeContainer.innerHTML = `
-            <h2>🏚 Chapter 2: Hiding in China</h2>
-            <p>Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper. Outside, the streets bustle, but inside, time moves painfully slow. They depend on strangers and underground helpers, each knock on the door sending chills down their spines. Food is scarce; trust is scarcer. The risk of capture hangs over every day.</p>
-            <h3>📌 Info</h3>
-            <ul>
-                <li>China classifies North Koreans as “economic migrants” rather than refugees, making them subject to deportation.</li>
-                <li>Many defectors are forced into human trafficking, forced labor, or marriages to survive.</li>
-                <li>Religious groups, NGOs, and underground networks play key roles in hiding and moving defectors.</li>
-            </ul>`;
-        showBanner('Chapter 2: Hiding');
-    } else if (chapter === 3) {
-        chapterBackground = "#663300";
-        narrativeContainer.innerHTML = `
-            <h2>🏜 Chapter 3: Crossing the Gobi Desert</h2>
-            <p>A vast sea of sand and frost stretches out before them. The Gobi Desert shows no mercy — the freezing nights, the endless horizon, the whisper of the wind. Yeonmi’s legs ache, her lips crack from thirst, but she keeps walking. With every step, the guide’s words echo in her mind: 'Keep moving, no matter what.' Around her, the desert swallows sound and hope alike.</p>
-            <h3>📌 Info</h3>
-            <ul>
-                <li>The Gobi Desert covers 1.3 million km² across China and Mongolia, with extreme temperature swings.</li>
-                <li>Defectors cross mainly on foot, sometimes guided by smugglers, with little water or supplies.</li>
-                <li>Temperatures in winter can drop to -40°C (-40°F), making the journey life-threatening.</li>
-            </ul>`;
-        showBanner('Chapter 3: Desert');
-    } else if (chapter === 4) {
-        chapterBackground = "#336600";
-        narrativeContainer.innerHTML = `
-            <h2>🏁 Chapter 4: Reaching Mongolia</h2>
-            <p>Beyond the final fence lies Mongolia — and the promise of freedom. Yeonmi can hardly believe they’ve made it this far. At the border post, the air is tense. Every passport stamp, every glance from a guard feels like a lifetime. As the gates open, her mother’s grip tightens. This is it. After years of fear, they may finally have a future.</p>
-            <h3>📌 Info</h3>
-            <ul>
-                <li>Mongolia has quietly cooperated with South Korea and the UN to allow North Korean defectors to transit safely.</li>
-                <li>Once processed, most defectors are flown to Seoul, where they enter resettlement programs.</li>
-                <li>Defectors face years of adjustment, learning a new language, culture, and rebuilding their lives.</li>
-            </ul>`;
-        showBanner('Chapter 4: Freedom');
-    }
+            </ul>`
+        },
+        {
+            bg: "#333300",
+            title: "🏚 Chapter 2: Hiding in China",
+            text: `Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper. 
+            Outside, the streets bustle, but inside, time moves painfully slow. 
+            They depend on strangers and underground helpers, each knock on the door sending chills down their spines.`,
+            info: `<ul>
+                <li>China classifies North Koreans as “economic migrants” rather than refugees.</li>
+                <li>Many defectors are forced into human trafficking or forced labor to survive.</li>
+                <li>NGOs and underground networks are vital to helping defectors hide and move safely.</li>
+            </ul>`
+        },
+        {
+            bg: "#663300",
+            title: "🏜 Chapter 3: Crossing the Gobi Desert",
+            text: `A vast sea of sand and frost stretches before them. 
+            The Gobi Desert shows no mercy — freezing nights, endless horizon. 
+            With every step, Yeonmi recalls the guide’s words: "Keep moving, no matter what."`,
+            info: `<ul>
+                <li>The Gobi Desert spans 1.3 million km² across China and Mongolia.</li>
+                <li>Defectors often walk on foot, enduring brutal cold and heat.</li>
+                <li>Temperatures can drop to -40°C in winter — survival depends on endurance and luck.</li>
+            </ul>`
+        },
+        {
+            bg: "#336600",
+            title: "🏁 Chapter 4: Reaching Mongolia",
+            text: `Beyond the final fence lies Mongolia — and the promise of freedom. 
+            At the border post, every passport stamp feels like an eternity. 
+            As the gates open, Yeonmi’s mother squeezes her hand: this is it.`,
+            info: `<ul>
+                <li>Mongolia cooperates with South Korea and the UN to assist North Korean defectors.</li>
+                <li>Defectors are flown to Seoul for resettlement programs after processing.</li>
+                <li>They face years of adjustment, learning language, culture, and rebuilding lives.</li>
+            </ul>`
+        }
+    ];
+    const c = chapterData[chapter - 1];
+    chapterBackground = c.bg;
+    narrativeContainer.innerHTML = `<h2>${c.title}</h2><p>${c.text}</p><h3>📌 Info</h3>${c.info}`;
+    showBanner(c.title);
 }
-
 
 function showBanner(text) {
     chapterBanner.textContent = text;
@@ -137,23 +139,26 @@ function update() {
         players.forEach(p => p.x -= p.speed);
         direction = 1;
         moved = true;
-    } else if (keys["ArrowRight"]) {
+    }
+    if (keys["ArrowRight"]) {
         players.forEach(p => p.x += p.speed);
         direction = 2;
         moved = true;
-    } else {
-        direction = 0;
     }
+    if (!moved) direction = 0;
 
-    players.forEach(p => {
+    // Prevent overlap at right edge
+    players.forEach((p, index) => {
         p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
+        if (index > 0 && p.x < players[index - 1].x + displayWidth) {
+            p.x = players[index - 1].x + displayWidth + 2;
+        }
     });
 
-    if (players[0].x + displayWidth >= canvas.width) {
-        currentChapter++;
-        if (currentChapter > 4) currentChapter = 1;
-        players.forEach(p => p.x = 0);
-        stamina = 100;
+    if (players[0].x + displayWidth >= canvas.width - 50) {
+        currentChapter = currentChapter < 4 ? currentChapter + 1 : 1;
+        players.forEach((p, idx) => p.x = 100 + idx * 40);
+        stamina = maxStamina;
         isHiding = false;
         loadChapter(currentChapter);
     }
@@ -162,11 +167,9 @@ function update() {
 
     if (currentChapter === 3) {
         if (keys["ArrowRight"] || keys["ArrowLeft"]) {
-            stamina -= staminaDepletionRate;
-            stamina = Math.max(0, stamina);
+            stamina = Math.max(0, stamina - staminaDepletionRate);
         } else {
-            stamina += staminaRegenRate;
-            stamina = Math.min(maxStamina, stamina);
+            stamina = Math.min(maxStamina, stamina + staminaRegenRate);
         }
     }
 
