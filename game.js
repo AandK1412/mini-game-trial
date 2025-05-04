@@ -156,9 +156,8 @@ function update() {
         }
     });
 
-    // dynamic right edge
-    let rightEdge = currentChapter === 1 ? canvas.width - 50 : canvas.width;
-
+    // Right edge detection (allow margin)
+    let rightEdge = currentChapter === 1 ? canvas.width - 50 : canvas.width - 10;
     if (players[0].x + displayWidth >= rightEdge) {
         currentChapter = currentChapter < 4 ? currentChapter + 1 : 1;
         players.forEach((p, idx) => p.x = 70 + idx * 40);
@@ -197,7 +196,6 @@ function update() {
 }
 
 function draw() {
-    // Draw background image or fallback color
     if (currentChapter >= 2 && backgrounds[currentChapter]) {
         ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
     } else {
@@ -205,7 +203,6 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Snow only in chapter 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -215,7 +212,6 @@ function draw() {
         });
     }
 
-    // Only draw ground if no background image is used (chapter 1)
     if (currentChapter === 1) {
         ctx.fillStyle = "#89c2d9";
         ctx.fillRect(0, 350, canvas.width, 50);
@@ -224,7 +220,6 @@ function draw() {
         ctx.fillRect(canvas.width - 50, 330, 50, 70);
     }
 
-    // Draw players (on top of background)
     players.forEach(p => {
         ctx.drawImage(
             p.sprite,
@@ -239,7 +234,6 @@ function draw() {
         );
     });
 
-    // Hiding overlay
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -248,7 +242,6 @@ function draw() {
         ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
     }
 
-    // Stamina bar
     if (currentChapter === 3) {
         ctx.fillStyle = "#444";
         ctx.fillRect(20, 20, 200, 20);
@@ -258,3 +251,5 @@ function draw() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
+
+gameLoop();
