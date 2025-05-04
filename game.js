@@ -204,15 +204,15 @@ function update() {
 }
 
 function draw() {
-    // Draw background image if available for chapters 2, 3, 4
-    if (currentChapter >= 2 && backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
+    // Draw background image if available for all chapters
+    if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
         ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
     } else {
         ctx.fillStyle = chapterBackground;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Snow for chapter 1 and 3
+    // Snow effect for chapters 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -220,45 +220,6 @@ function draw() {
             ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
             ctx.fill();
         });
-    }
-
-    // Chapter-specific ground
-    if (currentChapter === 2) {
-        // Cracked ground
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 2;
-        for (let i = 0; i < canvas.width; i += 50) {
-            ctx.beginPath();
-            ctx.moveTo(i, 350);
-            ctx.lineTo(i + 10, 400);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(i + 25, 350);
-            ctx.lineTo(i + 35, 400);
-            ctx.stroke();
-        }
-    } else if (currentChapter === 3) {
-        // Sand ground
-        ctx.fillStyle = "#C2B280";
-        ctx.fillRect(0, 350, canvas.width, 50);
-        ctx.fillStyle = "#D2B48C";
-        for (let i = 0; i < canvas.width; i += 40) {
-            ctx.beginPath();
-            ctx.arc(i + 20, 350, 10, 0, Math.PI, true);
-            ctx.fill();
-        }
-    } else {
-        // Ice ground for chapter 1
-        ctx.fillStyle = "#89c2d9";
-        ctx.fillRect(0, 350, canvas.width, 50);
-    }
-
-    // Only draw river banks in chapter 1
-    if (currentChapter === 1) {
-        ctx.fillStyle = "#495057";
-        ctx.fillRect(0, 330, 50, 70);
-        ctx.fillRect(canvas.width - 50, 330, 50, 70);
     }
 
     // Draw characters
@@ -295,5 +256,6 @@ function draw() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
+
 
 gameLoop();
