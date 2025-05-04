@@ -10,6 +10,8 @@ const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
+const chapter2BackgroundImage = new Image();
+chapter2BackgroundImage.src = "assets/chapter2-bg.png";
 
 const spriteWidth = 32;
 const spriteHeight = 32;
@@ -27,7 +29,7 @@ let chapterBackground = "#002244";
 
 const players = [
     { x: 70, y: 318, speed: 2, sprite: girlSprite },
-    { x: 70, y: 318, speed: 2, sprite: motherSprite }
+    { x: 110, y: 318, speed: 2, sprite: motherSprite }
 ];
 
 const snowflakes = Array.from({ length: 50 }, () => ({
@@ -147,10 +149,9 @@ function update() {
     }
     if (!moved) direction = 0;
 
-    // Prevent overlap at right edge
     players.forEach((p, index) => {
         p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
-        if (index > 0 && p.x < players[index - 1].x + displayWidth) {
+        if (index > 0 && p.x < players[index - 1].x + displayWidth + 2) {
             p.x = players[index - 1].x + displayWidth + 2;
         }
     });
@@ -193,10 +194,13 @@ function update() {
 }
 
 function draw() {
-    ctx.fillStyle = chapterBackground;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (currentChapter === 2 && chapter2BackgroundImage.complete && chapter2BackgroundImage.naturalHeight !== 0) {
+        ctx.drawImage(chapter2BackgroundImage, 0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.fillStyle = chapterBackground;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
-    // Snow for chapters 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -206,12 +210,8 @@ function draw() {
         });
     }
 
-    // Ground drawing per chapter
     if (currentChapter === 2) {
-        // Cracked ground (China)
-        ctx.fillStyle = "#8B0000";  // dark red
-        ctx.fillRect(0, 350, canvas.width, 50);
-        ctx.strokeStyle = "#000";  // cracks
+        ctx.strokeStyle = "#000";
         ctx.lineWidth = 2;
         for (let i = 0; i < canvas.width; i += 50) {
             ctx.beginPath();
@@ -225,27 +225,23 @@ function draw() {
             ctx.stroke();
         }
     } else if (currentChapter === 3) {
-        // Sand ground (Gobi Desert)
-        ctx.fillStyle = "#C2B280";  // sandy color
+        ctx.fillStyle = "#C2B280";
         ctx.fillRect(0, 350, canvas.width, 50);
-        ctx.fillStyle = "#D2B48C";  // lighter sand dunes
+        ctx.fillStyle = "#D2B48C";
         for (let i = 0; i < canvas.width; i += 40) {
             ctx.beginPath();
             ctx.arc(i + 20, 350, 10, 0, Math.PI, true);
             ctx.fill();
         }
     } else {
-        // Default ice ground (chapter 1, chapter 4)
         ctx.fillStyle = "#89c2d9";
         ctx.fillRect(0, 350, canvas.width, 50);
     }
 
-    // Side banks (fixed for all chapters)
     ctx.fillStyle = "#495057";
-    ctx.fillRect(0, 330, 50, 70);  // left bank
-    ctx.fillRect(canvas.width - 50, 330, 50, 70);  // right bank
+    ctx.fillRect(0, 330, 50, 70);
+    ctx.fillRect(canvas.width - 50, 330, 50, 70);
 
-    // Draw players
     players.forEach(p => {
         ctx.drawImage(
             p.sprite,
@@ -260,7 +256,6 @@ function draw() {
         );
     });
 
-    // Hiding overlay
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -269,7 +264,6 @@ function draw() {
         ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
     }
 
-    // Stamina bar
     if (currentChapter === 3) {
         ctx.fillStyle = "#444";
         ctx.fillRect(20, 20, 200, 20);
@@ -279,6 +273,5 @@ function draw() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
-
 
 gameLoop();
