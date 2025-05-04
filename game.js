@@ -153,12 +153,12 @@ function update() {
     let moved = false;
     if (keys["ArrowLeft"]) {
         players.forEach(p => p.x -= p.speed);
-        direction = 1;
+        direction = 1;  // Left
         moved = true;
     }
     if (keys["ArrowRight"]) {
         players.forEach(p => p.x += p.speed);
-        direction = 2;
+        direction = 0;  // Right
         moved = true;
     }
     if (!moved) direction = 0;
