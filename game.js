@@ -225,10 +225,19 @@ function draw() {
     }
 
     players.forEach(p => {
+        // Micro-adjust sprite frame positioning
+        const xOffset = 2; // Adjust this for slight horizontal shifts (e.g., move left or right)
+        const yOffset = 0; // Adjust for vertical fine-tuning (e.g., up or down)
+        
+        // Adjust frame index for micro-adjustment
+        const frameX = frameIndex * spriteWidth + xOffset; // Shift horizontally
+        const frameY = direction * spriteHeight + yOffset; // Shift vertically
+
+        // Draw the adjusted frame
         ctx.drawImage(
             p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Use direction for correct row
+            frameX,
+            frameY,
             spriteWidth,
             spriteHeight,
             p.x,
@@ -255,5 +264,6 @@ function draw() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
+
 
 gameLoop();
