@@ -1,136 +1,119 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 400;
 
-// Load girl sprite
-const girlImg = new Image();
-girlImg.src = 'assets/girl-sprite.png';
+// Load sprite image
+const girlSprite = new Image();
+girlSprite.src = "assets/girl-sprite.png";
 
-// Load mother sprite
-const motherImg = new Image();
-motherImg.src = 'assets/mother-sprite.png';
+// Sprite setup
+const spriteWidth = 32;
+const spriteHeight = 32;
+let frameIndex = 0;
+const frameCount = 3;
+let frameTimer = 0;
+const frameSpeed = 10;
+let direction = 0; // 0 = idle, 1 = left, 2 = right
 
-// Sprite settings
-const frameWidth = 32;
-const frameHeight = 32;
-const maxFrames = 3;
-let currentFrame = 0;
-const animationSpeed = 10;
-let tick = 0;
-
+// Player object
 const player = {
     x: 100,
     y: 300,
-    width: frameWidth,
-    height: frameHeight,
-    speed: 2,
-    dx: 0
+    width: spriteWidth,
+    height: spriteHeight,
+    speed: 2
 };
 
-const mother = {
-    x: 60,
-    y: 300,
-    width: frameWidth,
-    height: frameHeight
-};
+// Snow particles
+const snowflakes = Array.from({ length: 50 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 2 + 1,
+    speed: Math.random() * 1 + 0.5
+}));
 
-// Snow particle system
-const snowflakes = [];
-for (let i = 0; i < 100; i++) {
-    snowflakes.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        speed: Math.random() * 1 + 0.5
-    });
-}
+// Key handling
+const keys = {};
+document.addEventListener("keydown", e => {
+    keys[e.key] = true;
+});
+document.addEventListener("keyup", e => {
+    keys[e.key] = false;
+});
 
-function updateSnow() {
-    for (let flake of snowflakes) {
-        flake.y += flake.speed;
-        if (flake.y > canvas.height) {
-            flake.y = 0;
-            flake.x = Math.random() * canvas.width;
-        }
-    }
+// Game loop
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
 }
 
 function update() {
-    player.x += player.dx;
-    mother.x += player.dx;
-
-    if (player.x < 0) player.x = 0;
-    if (player.x > canvas.width - frameWidth) player.x = canvas.width - frameWidth;
-
-    if (mother.x < 0) mother.x = 0;
-    if (mother.x > canvas.width - frameWidth) mother.x = canvas.width - frameWidth;
-
-    tick++;
-    if (tick % animationSpeed === 0) {
-        currentFrame = (currentFrame + 1) % maxFrames;
+    // Player movement
+    if (keys["ArrowLeft"]) {
+        player.x -= player.speed;
+        direction = 1;
+    } else if (keys["ArrowRight"]) {
+        player.x += player.speed;
+        direction = 2;
+    } else {
+        direction = 0;
     }
 
-    updateSnow();
-}
+    // Keep player in bounds
+    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
 
-function drawGradientBackground() {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#0a1e3d');  // dark blue top
-    gradient.addColorStop(1, '#1c3b63');  // lighter blue bottom
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function drawSnow() {
-    ctx.fillStyle = 'white';
-    for (let flake of snowflakes) {
-        ctx.beginPath();
-        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
-        ctx.fill();
+    // Animate sprite
+    frameTimer++;
+    if (frameTimer >= frameSpeed) {
+        frameTimer = 0;
+        frameIndex = (frameIndex + 1) % frameCount;
     }
-}
 
-function drawRiver() {
-    ctx.fillStyle = '#87ceeb';  // frozen river light blue
-    ctx.fillRect(0, 350, canvas.width, 50);
+    // Update snow
+    snowflakes.forEach(snow => {
+        snow.y += snow.speed;
+        if (snow.y > canvas.height) {
+            snow.y = 0;
+            snow.x = Math.random() * canvas.width;
+        }
+    });
 }
 
 function draw() {
-    drawGradientBackground();
-    drawSnow();
-    drawRiver();
+    // Draw night gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#001d3d");
+    gradient.addColorStop(1, "#003566");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let row = player.dx >= 0 ? 1 : 3;
+    // Draw river (ice)
+    ctx.fillStyle = "#89c2d9";
+    ctx.fillRect(0, 350, canvas.width, 50);
 
-    // Draw mother
+    // Draw snowflakes
+    ctx.fillStyle = "#fff";
+    snowflakes.forEach(snow => {
+        ctx.beginPath();
+        ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // Draw player sprite
     ctx.drawImage(
-        motherImg,
-        currentFrame * frameWidth, row * frameHeight, frameWidth, frameHeight,
-        mother.x, mother.y, frameWidth, frameHeight
-    );
-
-    // Draw girl
-    ctx.drawImage(
-        girlImg,
-        currentFrame * frameWidth, row * frameHeight, frameWidth, frameHeight,
-        player.x, player.y, frameWidth, frameHeight
+        girlSprite,
+        frameIndex * spriteWidth,       // source x
+        direction * spriteHeight,      // source y
+        spriteWidth,                   // source width
+        spriteHeight,                  // source height
+        player.x,                      // destination x
+        player.y,                      // destination y
+        spriteWidth,                   // destination width
+        spriteHeight                   // destination height
     );
 }
 
-function loop() {
-    update();
-    draw();
-    requestAnimationFrame(loop);
-}
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') player.dx = player.speed;
-    if (e.key === 'ArrowLeft') player.dx = -player.speed;
-});
-
-document.addEventListener('keyup', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') player.dx = 0;
-});
-
-loop();
+// Start the game
+gameLoop();
