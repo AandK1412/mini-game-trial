@@ -2,53 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Escape Across the Frozen River</title>
+  <title>North Korea Defectors Simulation</title>
   <style>
     body {
       margin: 0;
       background-color: #001122;
       font-family: sans-serif;
-    }
-    canvas {
-      border: 2px solid white;
-      display: block;
-      margin: 20px auto;
-    }
-    #narrativeContainer {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 30%;
-      background: rgba(0, 0, 0, 0.7);
       color: white;
-      padding: 15px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
       border-radius: 10px;
-      max-height: 90%;
-      overflow-y: auto;
     }
-    #chapterBanner {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.8);
+    h1, h2 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .team-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .team-list div {
+      background: #223344;
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+    .map-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .map-container img {
+      max-width: 100%;
+      border: 2px solid white;
+      border-radius: 5px;
+    }
+    .start-button {
+      display: block;
+      margin: 30px auto;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #28a745;
       color: white;
-      padding: 10px 20px;
+      border: none;
       border-radius: 8px;
-      font-size: 24px;
-      opacity: 0;
-      transition: opacity 1s, top 1s;
-      pointer-events: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .start-button:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
 
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <div id="narrativeContainer"></div>
-  <div id="chapterBanner"></div>
+  <div class="container">
+    <h1>North Korea Defectors Simulation</h1>
 
-  <!-- Make sure assets like girl-sprite.png, mother-sprite.png, and chapter2-bg.png are in the assets/ folder -->
-  <script src="game.js"></script>
+    <div class="section">
+      <h2>Case Background</h2>
+      <p>
+        This simulation takes you through the harrowing journey of North Korean defectors 
+        as they navigate the dangers of escape across the Yalu River, hide in China, cross the Gobi Desert, 
+        and seek freedom in Mongolia. Players will face real-life challenges, make critical decisions, 
+        and experience the risks and resilience behind every step.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Our Team</h2>
+      <div class="team-list">
+        <div>Anrunya</div>
+        <div>Kshama</div>
+        <div>Aakash</div>
+        <div>Harsh</div>
+        <div>Avi</div>
+        <div>Sophia</div>
+      </div>
+      <p style="text-align: center; margin-top: 10px;"><strong>Professor:</strong> Hailong Zhang</p>
+    </div>
+
+    <div class="section">
+      <h2>Journey Map</h2>
+      <div class="map-container">
+        <img src="assets/map.png" alt="Journey Map">
+      </div>
+    </div>
+
+    <button class="start-button" onclick="window.location.href='game.html'">Start Simulation</button>
+  </div>
+
 </body>
 </html>
