@@ -17,15 +17,19 @@ backgrounds[2].src = "assets/chapter2.png";
 backgrounds[3].src = "assets/chapter3.png";
 backgrounds[4].src = "assets/chapter4.png";
 
-// Use correct frame sizes (check your sprite sheets)
-const spriteWidth = 125;   // girl sprite
-const spriteHeight = 166;
-const scale = 0.2;         
+
 
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
+
+// Use correct frame sizes (check your sprite sheets)
+const spriteWidth = 32;
+const spriteHeight = 32;
+const scale = 2;
+const displayWidth = spriteWidth * scale;
+const displayHeight = spriteHeight * scale;  
 
 let frameIndex = 0;
 const frameCount = 3;
