@@ -153,15 +153,15 @@ function update() {
     let moved = false;
     if (keys["ArrowLeft"]) {
         players.forEach(p => p.x -= p.speed);
-        direction = 1;  // Left
+        direction = 2;  // Left (bottom row)
         moved = true;
     }
     if (keys["ArrowRight"]) {
         players.forEach(p => p.x += p.speed);
-        direction = 0;  // Right
+        direction = 1;  // Right (second row)
         moved = true;
     }
-    if (!moved) direction = 0;
+    if (!moved) direction = 1;
 
     players.forEach((p, index) => {
         p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
@@ -228,7 +228,7 @@ function draw() {
         ctx.drawImage(
             p.sprite,
             frameIndex * spriteWidth,
-            direction * spriteHeight,
+            direction * spriteHeight,  // Use direction for correct row
             spriteWidth,
             spriteHeight,
             p.x,
