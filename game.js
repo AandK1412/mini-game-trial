@@ -13,7 +13,6 @@ backgrounds[2].src = "assets/chapter2.png";
 backgrounds[3].src = "assets/chapter3.png";
 backgrounds[4].src = "assets/chapter4.png";
 
-
 canvas.width = 800;
 canvas.height = 400;
 
@@ -21,8 +20,6 @@ const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
-const chapter2BackgroundImage = new Image();
-chapter2BackgroundImage.src = "assets/chapter2-bg.png";
 
 const spriteWidth = 32;
 const spriteHeight = 32;
@@ -78,9 +75,7 @@ function loadChapter(chapter) {
         {
             bg: "#002244",
             title: "❄ Chapter 1: Escape Across the Frozen River",
-            text: `The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River. 
-            Behind them, the familiar shadows of home; ahead, a frozen no-man’s land. Guards patrol nearby, their boots crunching on snow. 
-            Every crack of ice feels like a gunshot in the silence. Yeonmi grips her mother’s hand, her heart racing — they have only one chance.`,
+            text: `The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River...`,
             info: `<ul>
                 <li>The Yalu River is about 800 km long and serves as a natural border between North Korea and China.</li>
                 <li>Many defectors cross at night to avoid detection, often without guides or proper equipment.</li>
@@ -90,37 +85,31 @@ function loadChapter(chapter) {
         {
             bg: "#333300",
             title: "🏚 Chapter 2: Hiding in China",
-            text: `Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper. 
-            Outside, the streets bustle, but inside, time moves painfully slow. 
-            They depend on strangers and underground helpers, each knock on the door sending chills down their spines.`,
+            text: `Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper...`,
             info: `<ul>
-                <li>China classifies North Koreans as “economic migrants” rather than refugees.</li>
-                <li>Many defectors are forced into human trafficking or forced labor to survive.</li>
-                <li>NGOs and underground networks are vital to helping defectors hide and move safely.</li>
+                <li>China classifies North Koreans as “economic migrants.”</li>
+                <li>Many defectors are forced into trafficking or labor to survive.</li>
+                <li>NGOs and networks help them hide and escape safely.</li>
             </ul>`
         },
         {
             bg: "#663300",
             title: "🏜 Chapter 3: Crossing the Gobi Desert",
-            text: `A vast sea of sand and frost stretches before them. 
-            The Gobi Desert shows no mercy — freezing nights, endless horizon. 
-            With every step, Yeonmi recalls the guide’s words: "Keep moving, no matter what."`,
+            text: `A vast sea of sand and frost stretches before them...`,
             info: `<ul>
-                <li>The Gobi Desert spans 1.3 million km² across China and Mongolia.</li>
-                <li>Defectors often walk on foot, enduring brutal cold and heat.</li>
-                <li>Temperatures can drop to -40°C in winter — survival depends on endurance and luck.</li>
+                <li>The Gobi spans 1.3 million km² across China and Mongolia.</li>
+                <li>Defectors often cross on foot in brutal cold and heat.</li>
+                <li>Survival depends on endurance and luck.</li>
             </ul>`
         },
         {
             bg: "#336600",
             title: "🏁 Chapter 4: Reaching Mongolia",
-            text: `Beyond the final fence lies Mongolia — and the promise of freedom. 
-            At the border post, every passport stamp feels like an eternity. 
-            As the gates open, Yeonmi’s mother squeezes her hand: this is it.`,
+            text: `Beyond the final fence lies Mongolia — and the promise of freedom...`,
             info: `<ul>
-                <li>Mongolia cooperates with South Korea and the UN to assist North Korean defectors.</li>
-                <li>Defectors are flown to Seoul for resettlement programs after processing.</li>
-                <li>They face years of adjustment, learning language, culture, and rebuilding lives.</li>
+                <li>Mongolia works with South Korea and the UN to help defectors.</li>
+                <li>They are flown to Seoul for resettlement programs.</li>
+                <li>Adjustment takes years, with language and culture shifts.</li>
             </ul>`
         }
     ];
@@ -167,9 +156,12 @@ function update() {
         }
     });
 
-    if (players[0].x + displayWidth >= canvas.width - 50) {
+    // dynamic right edge
+    let rightEdge = currentChapter === 1 ? canvas.width - 50 : canvas.width;
+
+    if (players[0].x + displayWidth >= rightEdge) {
         currentChapter = currentChapter < 4 ? currentChapter + 1 : 1;
-        players.forEach((p, idx) => p.x = 100 + idx * 40);
+        players.forEach((p, idx) => p.x = 70 + idx * 40);
         stamina = maxStamina;
         isHiding = false;
         loadChapter(currentChapter);
@@ -205,7 +197,6 @@ function update() {
 }
 
 function draw() {
-    // Draw chapter background or color fill
     if (currentChapter >= 2 && backgrounds[currentChapter]) {
         ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
     } else {
@@ -213,7 +204,6 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Snow for chapters 1 and 3
     if (currentChapter === 1 || currentChapter === 3) {
         ctx.fillStyle = "#fff";
         snowflakes.forEach(snow => {
@@ -223,7 +213,6 @@ function draw() {
         });
     }
 
-    // Ground drawing per chapter
     if (currentChapter === 2) {
         ctx.fillStyle = "#8B0000";
         ctx.fillRect(0, 350, canvas.width, 50);
@@ -234,7 +223,6 @@ function draw() {
             ctx.moveTo(i, 350);
             ctx.lineTo(i + 10, 400);
             ctx.stroke();
-
             ctx.beginPath();
             ctx.moveTo(i + 25, 350);
             ctx.lineTo(i + 35, 400);
@@ -254,47 +242,7 @@ function draw() {
         ctx.fillRect(0, 350, canvas.width, 50);
     }
 
-    // Draw banks ONLY in chapter 1
     if (currentChapter === 1) {
         ctx.fillStyle = "#495057";
         ctx.fillRect(0, 330, 50, 70);
-        ctx.fillRect(canvas.width - 50, 330, 50, 70);
-    }
-
-    // Draw players
-    players.forEach(p => {
-        ctx.drawImage(
-            p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y,
-            displayWidth,
-            displayHeight
-        );
-    });
-
-    // Hiding overlay
-    if (currentChapter === 2 && isHiding) {
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#fff";
-        ctx.font = "20px Arial";
-        ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
-    }
-
-    // Stamina bar
-    if (currentChapter === 3) {
-        ctx.fillStyle = "#444";
-        ctx.fillRect(20, 20, 200, 20);
-        ctx.fillStyle = "#0f0";
-        ctx.fillRect(20, 20, 200 * (stamina / maxStamina), 20);
-        ctx.strokeStyle = "#fff";
-        ctx.strokeRect(20, 20, 200, 20);
-    }
-}
-
-
-gameLoop();
+        ctx.fill
