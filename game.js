@@ -1,134 +1,106 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = 800;
-canvas.height = 400;
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const narrativeContainer = document.getElementById('narrativeContainer');
+const chapterBanner = document.getElementById('chapterBanner');
 
-// Load sprite image
-const girlSprite = new Image();
-girlSprite.src = "assets/girl-sprite.png";
+let backgroundColor = '#002244';
+let groundColor = '#80cfff';
+let groundHeight = 50;
+let currentChapter = 1;
 
-// Sprite setup
-const spriteWidth = 32;
-const spriteHeight = 32;
-const scale = 2; // make it 2x larger
-const displayWidth = spriteWidth * scale;
-const displayHeight = spriteHeight * scale;
-let frameIndex = 0;
-const frameCount = 3;
-let frameTimer = 0;
-const frameSpeed = 10;
-let direction = 0; // 0 = idle, 1 = left, 2 = right
+let player = {
+  x: 50,
+  y: canvas.height - groundHeight - 48,
+  width: 32,
+  height: 48,
+  speed: 3,
+  dx: 0
+};
 
-// Player objects (girl + mother)
-const players = [
-    { x: 100, y: 318, speed: 2 },
-    { x: 140, y: 318, speed: 2 }
-];
+function loadChapter(chapter) {
+  if (chapter === 1) {
+    backgroundColor = '#002244';
+    narrativeContainer.innerHTML = `
+      <h2>❄ Narrative: Escape Across the Frozen River</h2>
+      <p>Under the cloak of a cold winter night, Yeonmi and her mother stand at the edge...</p>
+    `;
+    showBanner('Chapter 1: Escape');
+  } else if (chapter === 2) {
+    backgroundColor = '#001122';
+    narrativeContainer.innerHTML = `
+      <h2>🌄 Chapter 2: Crossing Into China</h2>
+      <p>They’ve crossed the ice and face a new land of danger and uncertainty.</p>
+      <h3>📌 Did You Know?</h3>
+      <ul>
+        <li>Defectors often rely on underground networks.</li>
+        <li>China does not recognize North Korean refugees and may deport them.</li>
+      </ul>
+    `;
+    showBanner('Chapter 2: China');
+  }
+}
 
-// Snow particles
-const snowflakes = Array.from({ length: 50 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: Math.random() * 2 + 1,
-    speed: Math.random() * 1 + 0.5
-}));
-
-// Key handling
-const keys = {};
-document.addEventListener("keydown", e => {
-    keys[e.key] = true;
-});
-document.addEventListener("keyup", e => {
-    keys[e.key] = false;
-});
-
-// Game loop
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
+function showBanner(text) {
+  chapterBanner.textContent = text;
+  chapterBanner.style.top = '20px';
+  chapterBanner.style.opacity = 1;
+  setTimeout(() => {
+    chapterBanner.style.top = '0px';
+    chapterBanner.style.opacity = 0;
+  }, 3000);
 }
 
 function update() {
-    let moved = false;
-    if (keys["ArrowLeft"]) {
-        players.forEach(p => p.x -= p.speed);
-        direction = 1;
-        moved = true;
-    } else if (keys["ArrowRight"]) {
-        players.forEach(p => p.x += p.speed);
-        direction = 2;
-        moved = true;
-    } else {
-        direction = 0;
-    }
+  player.x += player.dx;
 
-    // Keep players in bounds
-    players.forEach(p => {
-        p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
-    });
+  if (player.x + player.width >= canvas.width) {
+    currentChapter++;
+    player.x = 0;
+    loadChapter(currentChapter);
+  }
 
-    // Animate sprite only when moving
-    if (moved) {
-        frameTimer++;
-        if (frameTimer >= frameSpeed) {
-            frameTimer = 0;
-            frameIndex = (frameIndex + 1) % frameCount;
-        }
-    } else {
-        frameIndex = 1; // middle idle frame
-    }
-
-    // Update snow
-    snowflakes.forEach(snow => {
-        snow.y += snow.speed;
-        if (snow.y > canvas.height) {
-            snow.y = 0;
-            snow.x = Math.random() * canvas.width;
-        }
-    });
+  if (player.x < 0) player.x = 0;
 }
 
-function draw() {
-    // Draw night gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#001d3d");
-    gradient.addColorStop(1, "#003566");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw snowflakes
-    ctx.fillStyle = "#fff";
-    snowflakes.forEach(snow => {
-        ctx.beginPath();
-        ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-        ctx.fill();
-    });
-
-    // Draw river (ice ground)
-    ctx.fillStyle = "#89c2d9";
-    ctx.fillRect(0, 350, canvas.width, 50);
-
-    // Draw land on both sides
-    ctx.fillStyle = "#495057";
-    ctx.fillRect(0, 330, 50, 70); // left bank
-    ctx.fillRect(canvas.width - 50, 330, 50, 70); // right bank
-
-    // Draw players
-    players.forEach(p => {
-        ctx.drawImage(
-            girlSprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y,
-            displayWidth,
-            displayHeight
-        );
-    });
+function drawPlayer() {
+  ctx.fillStyle = 'magenta';
+  ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
-// Start game
+function drawGround() {
+  ctx.fillStyle = groundColor;
+  ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
+}
+
+function drawBackground() {
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function gameLoop() {
+  update();
+  drawBackground();
+  drawGround();
+  drawPlayer();
+  requestAnimationFrame(gameLoop);
+}
+
+function keyDown(e) {
+  if (e.key === 'ArrowRight') {
+    player.dx = player.speed;
+  } else if (e.key === 'ArrowLeft') {
+    player.dx = -player.speed;
+  }
+}
+
+function keyUp(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    player.dx = 0;
+  }
+}
+
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
+
+loadChapter(currentChapter);
 gameLoop();
