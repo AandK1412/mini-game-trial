@@ -2,31 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mini Game – Escape Across the Frozen River</title>
+  <title>Escape Across the Frozen River</title>
   <style>
     body {
       margin: 0;
       background-color: #001122;
       font-family: sans-serif;
     }
-
     canvas {
       border: 2px solid white;
       display: block;
       margin: 20px auto;
     }
-
     #narrativeContainer {
       position: absolute;
       top: 20px;
       right: 20px;
-      width: 40%;
-      color: white;
+      width: 30%;
       background: rgba(0, 0, 0, 0.6);
+      color: white;
       padding: 15px;
       border-radius: 10px;
     }
-
     #chapterBanner {
       position: absolute;
       top: 20px;
@@ -44,17 +41,10 @@
 </head>
 <body>
 
-  <!-- Game canvas -->
   <canvas id="gameCanvas" width="800" height="400"></canvas>
-
-  <!-- Narrative text box -->
   <div id="narrativeContainer"></div>
-
-  <!-- Chapter banner -->
   <div id="chapterBanner"></div>
 
-  <!-- Game script -->
   <script src="game.js"></script>
-
 </body>
 </html>
