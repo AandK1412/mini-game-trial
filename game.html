@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>North Korea Defectors Simulation - Game</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #001122;
+      font-family: sans-serif;
+      color: white;
+    }
+    canvas {
+      border: 2px solid white;
+      display: block;
+      margin: 20px auto;
+    }
+    #narrativeContainer {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 30%;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 90%;
+      overflow-y: auto;
+    }
+    #chapterBanner {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 24px;
+      opacity: 0;
+      transition: opacity 1s, top 1s;
+      pointer-events: none;
+    }
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .back-button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-button" onclick="window.location.href='index.html'">← Back to Home</button>
+  
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <div id="narrativeContainer"></div>
+  <div id="chapterBanner"></div>
+
+  <!-- Make sure you place your game.js script here -->
+  <script src="game.js"></script>
+</body>
+</html>
