@@ -33,7 +33,7 @@ let frameIndex = 0;
 const frameCount = 3;
 let frameTimer = 0;
 const frameSpeed = 10;
-let direction = 0;
+let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
 let currentChapter = 1;
 let chapterBackground = "#002244";
 
@@ -153,7 +153,7 @@ function update() {
     let moved = false;
     if (keys["ArrowLeft"]) {
         players.forEach(p => p.x -= p.speed);
-        direction = 2;  // Left (bottom row)
+        direction = 2;  // Left (third row)
         moved = true;
     }
     if (keys["ArrowRight"]) {
@@ -161,7 +161,7 @@ function update() {
         direction = 1;  // Right (second row)
         moved = true;
     }
-    if (!moved) direction = 1;
+    if (!moved) direction = 0;  // Idle (first row)
 
     players.forEach((p, index) => {
         p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
@@ -195,7 +195,7 @@ function update() {
             frameIndex = (frameIndex + 1) % frameCount;
         }
     } else {
-        frameIndex = 1;
+        frameIndex = 1; // Idle
     }
 
     snowflakes.forEach(snow => {
@@ -225,19 +225,11 @@ function draw() {
     }
 
     players.forEach(p => {
-        // Micro-adjust sprite frame positioning
-        const xOffset = 2; // Adjust this for slight horizontal shifts (e.g., move left or right)
-        const yOffset = 0; // Adjust for vertical fine-tuning (e.g., up or down)
-        
-        // Adjust frame index for micro-adjustment
-        const frameX = frameIndex * spriteWidth + xOffset; // Shift horizontally
-        const frameY = direction * spriteHeight + yOffset; // Shift vertically
-
-        // Draw the adjusted frame
+        // Draw the correct row based on direction (Idle, Right, Left)
         ctx.drawImage(
             p.sprite,
-            frameX,
-            frameY,
+            frameIndex * spriteWidth,
+            direction * spriteHeight,  // Adjusted direction based on idle (0), right (1), left (2)
             spriteWidth,
             spriteHeight,
             p.x,
@@ -264,6 +256,5 @@ function draw() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
-
 
 gameLoop();
