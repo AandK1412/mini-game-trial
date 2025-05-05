@@ -24,7 +24,7 @@ girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// NPC sprites
+// NPC images (static for NPCs)
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
@@ -51,7 +51,7 @@ const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
 
 let frameIndex = 0;
-const frameCount = 3;
+const frameCount = 1;  // Set frameCount to 1 for static images
 let frameTimer = 0;
 const frameSpeed = 10;
 let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
@@ -253,24 +253,24 @@ function draw() {
     }
 
     players.forEach(p => {
-        // Adjust y position to move characters higher or lower
         const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
 
         // Draw the character with adjusted y position
         ctx.drawImage(
             p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Direction: idle, right, or left
+            0, // No frame animation, just static image
+            0,
             spriteWidth,
             spriteHeight,
             p.x,
-            p.y + yOffset,  // Apply the vertical offset here
+            p.y + yOffset,
             displayWidth,
             displayHeight
         );
     });
 
     npcPositions.forEach(npc => {
+        // Draw NPC as a static image
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
 }
