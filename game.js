@@ -226,8 +226,8 @@ function update() {
     
         players.forEach(p => {
         // Adjust y position to move characters higher or lower
-        const yOffset = -20; // Negative values move the character higher
-        const xOffset = -20;
+        const yOffset = -5; // Negative values move the character higher
+        
     
         // Draw the character with adjusted y position
         ctx.drawImage(
@@ -236,7 +236,7 @@ function update() {
             direction * spriteHeight,  // Direction: idle, right, or left
             spriteWidth,
             spriteHeight,
-            p.x + xOffset,
+            p.x,
             p.y + yOffset,  // Apply the vertical offset here
             displayWidth,
             displayHeight
