@@ -66,12 +66,35 @@ const players = [
     { x: 140, y: groundY, speed: 2, sprite: motherSprite }
 ];
 
-// NPC positions for interaction
-const npcPositions = [
-    { x: 300, y: groundY, sprite: BorderguardSprite, dialogue: "Stop! Where are you going?" },
-    { x: 500, y: groundY, sprite: hostSprite, dialogue: "Welcome to my house. You must stay hidden." }
-    // Add other NPCs here for each chapter
-];
+// Set NPCs based on the chapter
+let npcPositions = [];
+
+function setChapterNPCs(chapter) {
+    switch (chapter) {
+        case 1:
+            npcPositions = [
+                { x: 300, y: groundY, sprite: BorderguardSprite, dialogue: "Stop! Where are you going?" }
+            ];
+            break;
+        case 2:
+            npcPositions = [
+                { x: 300, y: groundY, sprite: hostSprite, dialogue: "Welcome to my house. You must stay hidden." },
+                { x: 400, y: groundY, sprite: NGOSprite, dialogue: "NGOs help us. We must get you to safety." },
+                { x: 500, y: groundY, sprite: humantraffickSprite, dialogue: "You should be careful. They are watching." }
+            ];
+            break;
+        case 3:
+            npcPositions = [
+                { x: 350, y: groundY, sprite: DesertguideSprite, dialogue: "Keep walking. We will get through the desert." }
+            ];
+            break;
+        case 4:
+            npcPositions = [
+                { x: 350, y: groundY, sprite: MongolianOfficialSprite, dialogue: "Welcome to Mongolia. You're safe now." }
+            ];
+            break;
+    }
+}
 
 const snowflakes = Array.from({ length: 50 }, () => ({
     x: Math.random() * canvas.width,
@@ -135,6 +158,8 @@ function loadChapter(chapter) {
     chapterBackground = c.bg;
     narrativeContainer.innerHTML = `<h2>${c.title}</h2><p>${c.text}</p><h3>📌 Info</h3>${c.info}`;
     showBanner(c.title);
+
+    setChapterNPCs(chapter); // Set NPCs based on the current chapter
 }
 
 function showBanner(text) {
@@ -182,72 +207,4 @@ function update() {
     });
 
     if (players[0].x + displayWidth >= canvas.width - 50) {
-        currentChapter = currentChapter < 4 ? currentChapter + 1 : 1;
-        players.forEach((p, idx) => p.x = 70 + idx * 70);
-        stamina = maxStamina;
-        isHiding = false;
-        loadChapter(currentChapter);
-    }
-
-    if (currentChapter === 2 && hideCooldown > 0) hideCooldown--;
-
-    if (moved) {
-        frameTimer++;
-        if (frameTimer >= frameSpeed) {
-            frameTimer = 0;
-            frameIndex = (frameIndex + 1) % frameCount;
-        }
-    } else {
-        frameIndex = 1; // Idle
-    }
-
-    snowflakes.forEach(snow => {
-        snow.y += snow.speed;
-        if (snow.y > canvas.height) {
-            snow.y = 0;
-            snow.x = Math.random() * canvas.width;
-        }
-    });
-}
-
-function displayDialogue(dialogue) {
-    // Show dialogue on the canvas or anywhere you like
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(50, canvas.height - 100, canvas.width - 100, 70);  // Background for dialogue
-    ctx.fillStyle = "#fff";
-    ctx.font = "20px Arial";
-    ctx.fillText(dialogue, 60, canvas.height - 60);  // Display text
-}
-
-function draw() {
-    if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
-        ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.fillStyle = chapterBackground;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    players.forEach(p => {
-        // Adjust y position to move characters higher or lower
-        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
-
-        // Draw the character with adjusted y position
-        ctx.drawImage(
-            p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Direction: idle, right, or left
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y + yOffset,  // Apply the vertical offset here
-            displayWidth,
-            displayHeight
-        );
-    });
-
-    npcPositions.forEach(npc => {
-        ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
-    });
-}
-
-gameLoop();
+        currentChapter = currentChapter < 4 ? currentChapter + 1
