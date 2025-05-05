@@ -278,7 +278,6 @@ npcPositions.forEach(npc => {
     ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
 });
 
-
 }
 
 gameLoop();
