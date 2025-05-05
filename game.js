@@ -21,6 +21,18 @@ const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
+const Borderguard = new Image();
+girlSprite.src = "assets/Borderguard.png";
+const host = new Image();
+motherSprite.src = "assets/host.png";
+const humantraffick = new Image();
+motherSprite.src = "assets/humantraffick.png";
+const NGO = new Image();
+motherSprite.src = "assets/NGO.png";
+const Desertguide = new Image();
+motherSprite.src = "assets/Desertguide.png";
+const MongolianOfficial = new Image();
+motherSprite.src = "assets/MongolianOfficial.png";
 
 // Adjusted sprite sizes to better fit
 const spriteWidth = 40;  // Increased width
