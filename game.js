@@ -24,23 +24,34 @@ girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// NPC sprites
+// NPC sprites (full image, no cropping)
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
+const hostSprite = new Image();
+hostSprite.src = "assets/host.png";
+
+const humantraffickSprite = new Image();
+humantraffickSprite.src = "assets/humantraffick.png";
+
+const NGOSprite = new Image();
+NGOSprite.src = "assets/NGO.png";
+
+const DesertguideSprite = new Image();
+DesertguideSprite.src = "assets/Desertguide.png";
+
+const MongolianOfficialSprite = new Image();
+MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
+
 // Adjusted sprite sizes to better fit
-const girlSpriteWidth = 100;   // Daughter's sprite width (100px)
-const girlSpriteHeight = 130;  // Daughter's sprite height (130px)
-
-const motherSpriteWidth = 100;  // Mother's sprite width (100px)
-const motherSpriteHeight = 150; // Mother's sprite height (150px)
-
+const spriteWidth = 50;  // Width of each frame (50px)
+const spriteHeight = 50; // Height of each frame (50px)
 const scale = 2;        // Scale factor for displaying sprite sheet
-const displayWidth = girlSpriteWidth * scale;
-const displayHeight = girlSpriteHeight * scale; // Use daughter's dimensions for display size by default
+const displayWidth = spriteWidth * scale;
+const displayHeight = spriteHeight * scale;
 
 let frameIndex = 0;
-const frameCount = 9; // Number of frames in the 3x3 grid
+const frameCount = 3; // Number of frames per animation cycle (adjust as needed)
 let frameTimer = 0;
 const frameSpeed = 10;  // Controls animation speed
 let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
@@ -51,8 +62,8 @@ let chapterBackground = "#002244";
 const groundY = canvas.height - displayHeight - 10;
 
 const players = [
-    { x: 70, y: groundY, speed: 2, sprite: girlSprite, spriteWidth: girlSpriteWidth, spriteHeight: girlSpriteHeight },  // Daughter
-    { x: 140, y: groundY, speed: 2, sprite: motherSprite, spriteWidth: motherSpriteWidth, spriteHeight: motherSpriteHeight } // Mother
+    { x: 70, y: groundY, speed: 2, sprite: girlSprite },
+    { x: 140, y: groundY, speed: 2, sprite: motherSprite }
 ];
 
 const keys = {};
@@ -166,7 +177,7 @@ function update() {
             frameIndex = (frameIndex + 1) % frameCount;  // Cycle through frames for animation
         }
     } else {
-        frameIndex = 0; // Idle
+        frameIndex = 1; // Idle
     }
 
     snowflakes.forEach(snow => {
@@ -196,14 +207,12 @@ function draw() {
 
     players.forEach(p => {
         const yOffset = -10;  // Adjust vertical positioning of players
-        const row = Math.floor(frameIndex / 3);  // Get the correct row for animation
-        const col = frameIndex % 3;  // Get the correct column for animation
         ctx.drawImage(
             p.sprite,
-            col * p.spriteWidth,    // Use the column to get the correct frame
-            row * p.spriteHeight,   // Use the row to get the correct frame
-            p.spriteWidth, 
-            p.spriteHeight, 
+            frameIndex * spriteWidth,    // Use the frame index for animation
+            direction * spriteHeight,    // Use direction for left/right animation
+            spriteWidth, 
+            spriteHeight, 
             p.x, p.y + yOffset, 
             displayWidth, displayHeight
         );
