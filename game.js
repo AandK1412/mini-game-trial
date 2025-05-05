@@ -224,27 +224,29 @@ function update() {
             });
         }
     
-        players.forEach(p => {
-        // Adjust y position to move characters higher or lower (adjust as needed)
-        const yOffset = -10; // Negative values move the character higher
+       players.forEach(p => {
+        // Manually shifting the crop window (adjust these values for fine-tuning)
+        const sxOffset = -5;  // Shift the crop window horizontally (right)
+        const syOffset = -5;  // Shift the crop window vertically (down)
     
         // Ensure the sprite is correctly cropped based on frame width and height
-        const frameX = frameIndex * spriteWidth; // Horizontal position for the current frame
-        const frameY = direction * spriteHeight; // Vertical position (depends on direction: idle, right, or left)
+        const frameX = frameIndex * spriteWidth + sxOffset; // Apply the horizontal offset
+        const frameY = direction * spriteHeight + syOffset; // Apply the vertical offset
     
-        // Draw the sprite correctly without cropping
+        // Draw the sprite with the shifted crop window
         ctx.drawImage(
             p.sprite,
-            frameX,  // X position in the sprite sheet (based on frameIndex)
-            frameY,  // Y position in the sprite sheet (based on direction)
-            spriteWidth,  // Frame width
-            spriteHeight,  // Frame height
-            p.x,  // Draw position X
-            p.y + yOffset,  // Draw position Y (with offset for vertical shift)
+            frameX,  // Starting X position for cropping (with horizontal offset)
+            frameY,  // Starting Y position for cropping (with vertical offset)
+            spriteWidth,  // Width of the cropped frame
+            spriteHeight,  // Height of the cropped frame
+            p.x,  // X position on the canvas to draw the sprite
+            p.y + yOffset,  // Y position on the canvas to draw the sprite (with vertical offset)
             displayWidth,  // Display width on the canvas
             displayHeight  // Display height on the canvas
         );
     });
+    
 
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
