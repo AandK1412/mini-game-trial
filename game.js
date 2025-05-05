@@ -28,21 +28,6 @@ motherSprite.src = "assets/mother-sprite.png";
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
-const hostSprite = new Image();
-hostSprite.src = "assets/host.png";
-
-const humantraffickSprite = new Image();
-humantraffickSprite.src = "assets/humantraffick.png";
-
-const NGOSprite = new Image();
-NGOSprite.src = "assets/NGO.png";
-
-const DesertguideSprite = new Image();
-DesertguideSprite.src = "assets/Desertguide.png";
-
-const MongolianOfficialSprite = new Image();
-MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
-
 // Adjusted sprite sizes to better fit
 const spriteWidth = 50;  // Width of each frame (50px)
 const spriteHeight = 50; // Height of each frame (50px)
@@ -51,9 +36,9 @@ const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
 
 let frameIndex = 0;
-const frameCount = 3; // Number of frames
+const frameCount = 3; // Number of frames per animation cycle (adjust as needed)
 let frameTimer = 0;
-const frameSpeed = 10;
+const frameSpeed = 10;  // Controls animation speed
 let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
 let currentChapter = 1;
 let chapterBackground = "#002244";
@@ -65,50 +50,6 @@ const players = [
     { x: 70, y: groundY, speed: 2, sprite: girlSprite },
     { x: 140, y: groundY, speed: 2, sprite: motherSprite }
 ];
-
-// Set NPCs based on the chapter
-let npcPositions = [];
-
-function setChapterNPCs(chapter) {
-    switch (chapter) {
-        case 1:
-            npcPositions = [
-                { x: 300, y: groundY, sprite: BorderguardSprite, dialogue: "Stop! Where are you going?" }
-            ];
-            break;
-        case 2:
-            npcPositions = [
-                { x: 300, y: groundY, sprite: hostSprite, dialogue: "Welcome to my house. You must stay hidden." },
-                { x: 400, y: groundY, sprite: NGOSprite, dialogue: "NGOs help us. We must get you to safety." },
-                { x: 500, y: groundY, sprite: humantraffickSprite, dialogue: "You should be careful. They are watching." }
-            ];
-            break;
-        case 3:
-            npcPositions = [
-                { x: 350, y: groundY, sprite: DesertguideSprite, dialogue: "Keep walking. We will get through the desert." }
-            ];
-            break;
-        case 4:
-            npcPositions = [
-                { x: 350, y: groundY, sprite: MongolianOfficialSprite, dialogue: "Welcome to Mongolia. You're safe now." }
-            ];
-            break;
-    }
-}
-
-const snowflakes = Array.from({ length: 50 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: Math.random() * 2 + 1,
-    speed: Math.random() * 1 + 0.5
-}));
-
-let isHiding = false;
-let hideCooldown = 0;
-let stamina = 100;
-const maxStamina = 100;
-const staminaDepletionRate = 0.3;
-const staminaRegenRate = 0.1;
 
 const keys = {};
 document.addEventListener("keydown", e => {
@@ -158,7 +99,6 @@ function loadChapter(chapter) {
     chapterBackground = c.bg;
     narrativeContainer.innerHTML = `<h2>${c.title}</h2><p>${c.text}</p><h3>📌 Info</h3>${c.info}`;
     showBanner(c.title);
-
     setChapterNPCs(chapter); // Set NPCs based on the current chapter
 }
 
@@ -219,7 +159,7 @@ function update() {
         frameTimer++;
         if (frameTimer >= frameSpeed) {
             frameTimer = 0;
-            frameIndex = (frameIndex + 1) % frameCount;
+            frameIndex = (frameIndex + 1) % frameCount;  // Cycle through frames for animation
         }
     } else {
         frameIndex = 1; // Idle
@@ -254,8 +194,10 @@ function draw() {
         const yOffset = -10;  // Adjust vertical positioning of players
         ctx.drawImage(
             p.sprite,
-            0, 0,         // No cropping from sprite sheet
-            p.sprite.width, p.sprite.height,  // Full width and height of the sprite sheet
+            frameIndex * spriteWidth,    // Use the frame index for animation
+            direction * spriteHeight,    // Use direction for left/right animation
+            spriteWidth, 
+            spriteHeight, 
             p.x, p.y + yOffset, 
             displayWidth, displayHeight
         );
