@@ -17,23 +17,31 @@ backgrounds[2].src = "assets/chapter2.png";
 backgrounds[3].src = "assets/chapter3.png";
 backgrounds[4].src = "assets/chapter4.png";
 
-// Load sprites for each NPC
+// Create unique variables for each NPC sprite
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
+
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// Other NPCs
-const Borderguard = new Image();
-Borderguard.src = "assets/Borderguard.png";
-const host = new Image();
-host.src = "assets/host.png";
+// NPC sprites
+const BorderguardSprite = new Image();
+BorderguardSprite.src = "assets/Borderguard.png";
 
-// Ensure all sprites are loaded before drawing
-girlSprite.onload = () => console.log('girlSprite loaded');
-motherSprite.onload = () => console.log('motherSprite loaded');
-Borderguard.onload = () => console.log('Borderguard sprite loaded');
-host.onload = () => console.log('host sprite loaded');
+const hostSprite = new Image();
+hostSprite.src = "assets/host.png";
+
+const humantraffickSprite = new Image();
+humantraffickSprite.src = "assets/humantraffick.png";
+
+const NGOSprite = new Image();
+NGOSprite.src = "assets/NGO.png";
+
+const DesertguideSprite = new Image();
+DesertguideSprite.src = "assets/Desertguide.png";
+
+const MongolianOfficialSprite = new Image();
+MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
 
 // Adjusted sprite sizes to better fit
 const spriteWidth = 40;  // Increased width
@@ -60,8 +68,9 @@ const players = [
 
 // NPC positions for interaction
 const npcPositions = [
-    { x: 300, y: groundY, sprite: Borderguard, dialogue: "Stop! Where are you going?" },
-    { x: 500, y: groundY, sprite: host, dialogue: "Welcome to my house. You must stay hidden." }
+    { x: 300, y: groundY, sprite: BorderguardSprite, dialogue: "Stop! Where are you going?" },
+    { x: 500, y: groundY, sprite: hostSprite, dialogue: "Welcome to my house. You must stay hidden." }
+    // Add other NPCs here for each chapter
 ];
 
 const snowflakes = Array.from({ length: 50 }, () => ({
