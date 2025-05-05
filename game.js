@@ -50,11 +50,6 @@ const scale = 2;
 const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
 
-let frameIndex = 0;
-const frameCount = 3;
-let frameTimer = 0;
-const frameSpeed = 10;
-let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
 let currentChapter = 1;
 let chapterBackground = "#002244";
 
@@ -259,10 +254,7 @@ function draw() {
         // Draw the character with adjusted y position
         ctx.drawImage(
             p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Direction: idle, right, or left
-            spriteWidth,
-            spriteHeight,
+            0, 0, spriteWidth, spriteHeight,  // No frame adjustments needed
             p.x,
             p.y + yOffset,  // Apply the vertical offset here
             displayWidth,
