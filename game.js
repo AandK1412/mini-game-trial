@@ -224,28 +224,23 @@ function update() {
             });
         }
     
-           players.forEach(p => {
-            // Manually shifting the crop window (adjust these values for fine-tuning)
-            const sxOffset = 0;  // Shift the crop window horizontally (right)
-            const syOffset = 0;  // Shift the crop window vertically (down)
-        
-            // Ensure the sprite is correctly cropped based on frame width and height
-            const frameX = frameIndex * spriteWidth + sxOffset; // Apply the horizontal offset
-            const frameY = direction * spriteHeight + syOffset; // Apply the vertical offset
-        
-            // Draw the sprite with the shifted crop window
-            ctx.drawImage(
-                p.sprite,
-                frameX,  // Starting X position for cropping (with horizontal offset)
-                frameY,  // Starting Y position for cropping (with vertical offset)
-                spriteWidth,  // Width of the cropped frame
-                spriteHeight,  // Height of the cropped frame
-                p.x,  // X position on the canvas to draw the sprite
-                p.y + yOffset,  // Y position on the canvas to draw the sprite (with vertical offset)
-                displayWidth,  // Display width on the canvas
-                displayHeight  // Display height on the canvas
-            );
-        });
+        players.forEach(p => {
+        // Adjust y position to move characters higher or lower
+        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
+
+        // Draw the character with adjusted y position
+        ctx.drawImage(
+            p.sprite,
+            frameIndex * spriteWidth,
+            direction * spriteHeight,  // Direction: idle, right, or left
+            spriteWidth,
+            spriteHeight,
+            p.x,
+            p.y + yOffset,  // Apply the vertical offset here
+            displayWidth,
+            displayHeight
+        );
+    });
         
 
     if (currentChapter === 2 && isHiding) {
