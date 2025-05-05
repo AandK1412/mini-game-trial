@@ -19,10 +19,10 @@ backgrounds[4].src = "assets/chapter4.png";
 
 // Create unique variables for each NPC sprite
 const girlSprite = new Image();
-girlSprite.src = "assets/girl-sprite.png";
+girlSprite.src = "assets/girl-sprite.png"; // Player sprite with animation
 
 const motherSprite = new Image();
-motherSprite.src = "assets/mother-sprite.png";
+motherSprite.src = "assets/mother-sprite.png"; // Player sprite with animation
 
 // NPC sprites (static, no animation)
 const BorderguardSprite = new Image();
@@ -251,7 +251,7 @@ function draw() {
     players.forEach(p => {
         const yOffset = -10; // Negative values move the character higher
 
-        // Draw the player character with animation
+        // Draw the player character with animation (idle, left, or right)
         ctx.drawImage(
             p.sprite,
             frameIndex * spriteWidth,
@@ -265,7 +265,7 @@ function draw() {
         );
     });
 
-    // Draw NPCs (no animation, static sprites)
+    // Draw NPCs (static sprites, no animation)
     npcPositions.forEach(npc => {
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
