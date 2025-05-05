@@ -113,6 +113,7 @@ function showBanner(text) {
 }
 
 function gameLoop() {
+    console.log("Game loop is running");  // Debugging message
     update();
     draw();
     requestAnimationFrame(gameLoop);
@@ -162,7 +163,7 @@ function update() {
             frameIndex = (frameIndex + 1) % frameCount;  // Cycle through frames for animation
         }
     } else {
-        frameIndex = 1; // Idle
+        frameIndex = 0; // Idle
     }
 
     snowflakes.forEach(snow => {
