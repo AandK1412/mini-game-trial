@@ -24,7 +24,7 @@ girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// NPC sprites
+// NPC sprites (static, no animation)
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
@@ -44,8 +44,8 @@ const MongolianOfficialSprite = new Image();
 MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
 
 // Adjusted sprite sizes to better fit
-const spriteWidth = 40;  // Increased width
-const spriteHeight = 40; // Increased height
+const spriteWidth = 40;  // Increased width for characters
+const spriteHeight = 40; // Increased height for characters
 const scale = 2;
 const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
@@ -247,14 +247,17 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
+    // Draw player characters with animation
     players.forEach(p => {
-        // Adjust y position to move characters higher or lower
-        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
+        const yOffset = -10; // Negative values move the character higher
 
-        // Draw the character with adjusted y position
+        // Draw the player character with animation
         ctx.drawImage(
             p.sprite,
-            0, 0, spriteWidth, spriteHeight,  // No frame adjustments needed
+            frameIndex * spriteWidth,
+            direction * spriteHeight,  // Direction: idle, right, or left
+            spriteWidth,
+            spriteHeight,
             p.x,
             p.y + yOffset,  // Apply the vertical offset here
             displayWidth,
@@ -262,6 +265,7 @@ function draw() {
         );
     });
 
+    // Draw NPCs (no animation, static sprites)
     npcPositions.forEach(npc => {
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
