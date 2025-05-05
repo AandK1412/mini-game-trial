@@ -207,40 +207,40 @@ function update() {
     });
 }
 
-function draw() {
-    if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
-        ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.fillStyle = chapterBackground;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    if (currentChapter === 1 || currentChapter === 3) {
-        ctx.fillStyle = "#fff";
-        snowflakes.forEach(snow => {
-            ctx.beginPath();
-            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    }
-
-    players.forEach(p => {
-    // Adjust y position to move characters higher or lower
-    const yOffset = -10; // Negative values move the character higher
-
-    // Draw the character with adjusted y position
-    ctx.drawImage(
-        p.sprite,
-        frameIndex * spriteWidth,
-        direction * spriteHeight,  // Direction: idle, right, or left
-        spriteWidth,
-        spriteHeight,
-        p.x,
-        p.y + yOffset,  // Apply the vertical offset here
-        displayWidth,
-        displayHeight
-    );
-});
+    function draw() {
+        if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
+            ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
+        } else {
+            ctx.fillStyle = chapterBackground;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    
+        if (currentChapter === 1 || currentChapter === 3) {
+            ctx.fillStyle = "#fff";
+            snowflakes.forEach(snow => {
+                ctx.beginPath();
+                ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+    
+        players.forEach(p => {
+        // Adjust y position to move characters higher or lower
+        const yOffset = -15; // Negative values move the character higher
+    
+        // Draw the character with adjusted y position
+        ctx.drawImage(
+            p.sprite,
+            frameIndex * spriteWidth,
+            direction * spriteHeight,  // Direction: idle, right, or left
+            spriteWidth,
+            spriteHeight,
+            p.x,
+            p.y + yOffset,  // Apply the vertical offset here
+            displayWidth,
+            displayHeight
+        );
+    });
 
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
