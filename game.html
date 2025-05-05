@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>North Korea Defectors Simulation - Game</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #001122;
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #gameContainer {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;  /* Increase width for a larger game canvas */
+      height: 90%;  /* Adjust height to leave space for character profiles */
+    }
+
+    #narrativeContainer {
+      width: 40%;  /* Left side, character profiles take up 30% of the width */
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 90%;
+      overflow-y: auto;
+      box-sizing: border-box;
+      margin: 20px;
+    }
+
+    #gameCanvasWrapper {
+      width: 70%;  /* Right side, canvas takes up 70% of the width */
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    canvas {
+      border: 2px solid white;
+      display: block;
+      background: #87ceeb;
+      width: 100%;  /* Maintain 100% width relative to the wrapper */
+      height: auto; /* Adjust the height automatically to maintain aspect ratio */
+      max-width: 1000px; /* Limit the width of the canvas to make it larger */
+      max-height: 600px; /* Limit the height of the canvas */
+    }
+
+    #chapterBanner {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 24px;
+      opacity: 0;
+      transition: opacity 1s, top 1s;
+      pointer-events: none;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .back-button:hover {
+      background: #218838;
+    }
+
+    .character-profile {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #444;
+      border-radius: 8px;
+    }
+
+    .character-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    h4 {
+      display: inline-block;
+      margin: 0;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-button" onclick="window.location.href='index.html'">← Back to Home</button>
+
+  <div id="gameContainer">
+    <!-- Left side for Character Profiles -->
+    <div id="narrativeContainer"></div>
+
+    <!-- Right side for the Game Canvas -->
+    <div id="gameCanvasWrapper">
+      <canvas id="gameCanvas" width="1000" height="600"></canvas>
+    </div>
+  </div>
+
+  <!-- Chapter Banner (Center at the top) -->
+  <div id="chapterBanner"></div>
+
+  <!-- Include your game script here -->
+  <script src="game.js"></script>
+
+</body>
+</html>

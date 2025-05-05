@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>North Korea Defectors Simulation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      color: #333;
+      background-image: url('assets/background.jpg'); /* Correct image path */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-color: #f4f4f4; /* Fallback color */
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border: 3px solid #2980b9;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    details {
+      background: #ecf0f1;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      padding: 10px;
+      cursor: pointer;
+      border: 2px solid #2980b9;
+    }
+
+    summary {
+      font-size: 2em;
+      color: #3498db;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+      text-transform: uppercase;
+    }
+
+    summary:hover {
+      color: #2980b9;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    .team-list {
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .team-list div {
+      background-color: #2980b9;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-align: center;
+      margin: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .map-container img {
+      max-width: 100%;
+      border-radius: 10px;
+      border: 2px solid #3498db;
+    }
+
+    .start-button {
+      display: block;
+      width: 220px;
+      margin: 30px auto;
+      padding: 15px;
+      font-size: 1.3em;
+      background-color: #27ae60;
+      color: white;
+      border: 3px solid #2980b9;
+      border-radius: 10px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .start-button:hover {
+      background-color: #2ecc71;
+    }
+
+    .start-button:active {
+      background-color: #1abc9c;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>North Korea Defectors Simulation</h1>
+
+    <details>
+      <summary>Case Background</summary>
+      <p>
+        The North Korea Defectors Simulation takes you on a journey through the perilous escape routes that defectors take as they attempt to flee the regime of North Korea. Defectors face numerous challenges, from crossing rivers and mountains to seeking asylum in neighboring countries, often risking their lives to find safety and freedom.
+      </p>
+      <p>
+        The simulation is designed to raise awareness about the harsh realities of defectors' lives, the complex process of escape, and the dangers they face from surveillance, border patrols, and even human traffickers. It is based on real-world routes taken by defectors from North Korea to China, Mongolia, and ultimately to other countries where they can seek asylum and start a new life.
+      </p>
+      <p>
+        The simulation incorporates both the physical and emotional aspects of this journey. As players make decisions, they will have to weigh the risks of being caught against the potential benefits of their escape. Throughout the journey, players will experience the same uncertainties and difficult choices that defectors face on their path to freedom.
+      </p>
+      <p>
+        The mission is to highlight the resilience and courage of North Korean defectors, shedding light on their struggles in an effort to generate more support for their cause and foster empathy and understanding worldwide.
+      </p>
+    </details>
+
+    <details>
+      <summary>Meet the Team</summary>
+      <div class="team-list">
+        <div>Anrunya</div>
+        <div>Kshama</div>
+        <div>Aakash</div>
+        <div>Harsh</div>
+        <div>Avi</div>
+        <div>Sophia</div>
+      </div>
+      <p style="text-align: center;"><strong>Professor:</strong> Hailong Zhang</p>
+    </details>
+
+    <details>
+      <summary>Journey Map</summary>
+      <div class="map-container">
+        <img src="C:\Users\anrun\Downloads\mini-game-trial-main\mini-game-trial-main\assets\map.jpg" alt="Journey Map">
+      </div>
+    </details>
+
+    <button class="start-button" onclick="window.location.href='game.html'">Start Simulation</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 North Korea Defectors Simulation. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
