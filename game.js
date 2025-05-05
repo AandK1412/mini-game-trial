@@ -207,24 +207,24 @@ function update() {
     });
 }
 
-    function draw() {
-        if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
-            ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
-        } else {
-            ctx.fillStyle = chapterBackground;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-    
-        if (currentChapter === 1 || currentChapter === 3) {
-            ctx.fillStyle = "#fff";
-            snowflakes.forEach(snow => {
-                ctx.beginPath();
-                ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-    
-        players.forEach(p => {
+function draw() {
+    if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
+        ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.fillStyle = chapterBackground;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (currentChapter === 1 || currentChapter === 3) {
+        ctx.fillStyle = "#fff";
+        snowflakes.forEach(snow => {
+            ctx.beginPath();
+            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    players.forEach(p => {
         // Adjust y position to move characters higher or lower
         const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
 
@@ -241,7 +241,6 @@ function update() {
             displayHeight
         );
     });
-        
 
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
@@ -260,5 +259,6 @@ function update() {
         ctx.strokeRect(20, 20, 200, 20);
     }
 }
+
 
 gameLoop();
