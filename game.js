@@ -225,19 +225,22 @@ function draw() {
     }
 
     players.forEach(p => {
-        // Draw the correct row based on direction (Idle, Right, Left)
-        ctx.drawImage(
-            p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Adjusted direction based on idle (0), right (1), left (2)
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y,
-            displayWidth,
-            displayHeight
-        );
-    });
+    // Adjust y position to move characters higher or lower
+    const yOffset = -10; // Negative values move the character higher
+
+    // Draw the character with adjusted y position
+    ctx.drawImage(
+        p.sprite,
+        frameIndex * spriteWidth,
+        direction * spriteHeight,  // Direction: idle, right, or left
+        spriteWidth,
+        spriteHeight,
+        p.x,
+        p.y + yOffset,  // Apply the vertical offset here
+        displayWidth,
+        displayHeight
+    );
+});
 
     if (currentChapter === 2 && isHiding) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
