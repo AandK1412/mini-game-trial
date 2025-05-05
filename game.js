@@ -24,7 +24,7 @@ girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
 
-// NPC images (static for NPCs)
+// NPC sprites
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
@@ -44,14 +44,14 @@ const MongolianOfficialSprite = new Image();
 MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
 
 // Adjusted sprite sizes to better fit
-const spriteWidth = 40;  // Increased width
-const spriteHeight = 40; // Increased height
-const scale = 2;
+const spriteWidth = 50;  // Width of each frame (50px)
+const spriteHeight = 50; // Height of each frame (50px)
+const scale = 2;        // Scale factor for displaying sprite sheet
 const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
 
 let frameIndex = 0;
-const frameCount = 1;  // Set frameCount to 1 for static images
+const frameCount = 3; // Number of frames
 let frameTimer = 0;
 const frameSpeed = 10;
 let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
@@ -62,8 +62,8 @@ let chapterBackground = "#002244";
 const groundY = canvas.height - displayHeight - 10;
 
 const players = [
-    { x: 100, y: groundY, speed: 2, sprite: girlSprite },
-    { x: 150, y: groundY, speed: 2, sprite: motherSprite }
+    { x: 70, y: groundY, speed: 2, sprite: girlSprite },
+    { x: 140, y: groundY, speed: 2, sprite: motherSprite }
 ];
 
 // Set NPCs based on the chapter
@@ -199,7 +199,6 @@ function update() {
         }
     });
 
-    // Check for proximity and trigger dialogue if near NPC
     npcPositions.forEach(npc => {
         if (Math.abs(players[0].x - npc.x) < 50) {
             displayDialogue(npc.dialogue);  // Trigger dialogue display when in proximity
@@ -236,7 +235,6 @@ function update() {
 }
 
 function displayDialogue(dialogue) {
-    // Show dialogue on the canvas or anywhere you like
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(50, canvas.height - 100, canvas.width - 100, 70);  // Background for dialogue
     ctx.fillStyle = "#fff";
@@ -253,24 +251,17 @@ function draw() {
     }
 
     players.forEach(p => {
-        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
-
-        // Draw the character with adjusted y position
+        const yOffset = -10;  // Adjust vertical positioning of players
         ctx.drawImage(
             p.sprite,
-            0, // No frame animation, just static image
-            0,
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y + yOffset,
-            displayWidth,
-            displayHeight
+            0, 0,         // No cropping from sprite sheet
+            p.sprite.width, p.sprite.height,  // Full width and height of the sprite sheet
+            p.x, p.y + yOffset, 
+            displayWidth, displayHeight
         );
     });
 
     npcPositions.forEach(npc => {
-        // Draw NPC as a static image
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
 }
