@@ -59,71 +59,123 @@ const maxStamina = 100;
 const staminaDepletionRate = 0.3;
 const staminaRegenRate = 0.1;
 
-const keys = {};
-document.addEventListener("keydown", e => {
-    keys[e.key] = true;
-    if (e.key === " ") {
-        if (currentChapter === 2 && hideCooldown <= 0) {
-            isHiding = !isHiding;
-            hideCooldown = 20;
-        }
-    }
-});
-document.addEventListener("keyup", e => {
-    keys[e.key] = false;
-});
+let keys = {};
+let isNearNPC = false;
+let currentNPC = null;
+let playerChoice = "";
 
-loadChapter(currentChapter);
+// Define NPCs and their options for each chapter
+const npcData = {
+    1: [  // Chapter 1: Escape Across the Frozen River
+        {
+            name: "Border Guard",
+            x: 250,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "Crossing this river is suicide. Turn back before it's too late.", action: "end" },
+                { text: "Stop or I’ll shoot!", action: "continue" }
+            ]
+        },
+        {
+            name: "Smuggler/Guide",
+            x: 400,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "Pay me now, or find your own way across.", action: "continue" },
+                { text: "Stay quiet and follow my lead. One sound, and it's over.", action: "end" }
+            ]
+        }
+    ],
+    2: [  // Chapter 2: Hiding in China
+        {
+            name: "Host/Villager",
+            x: 250,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "Don't tell anyone you were here, understood?", action: "continue" },
+                { text: "You can stay here for the night, but leave by morning.", action: "end" }
+            ]
+        },
+        {
+            name: "Human Trafficker",
+            x: 400,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "A pretty girl like you could make good money, you know.", action: "end" },
+                { text: "I can get you across the city—if you pay the price.", action: "continue" }
+            ]
+        }
+    ],
+    3: [  // Chapter 3: Crossing the Gobi Desert
+        {
+            name: "Desert Guide",
+            x: 250,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "We move at night. The sun will kill you by day.", action: "continue" },
+                { text: "No water, no journey. Are you prepared?", action: "end" }
+            ]
+        },
+        {
+            name: "Border Patrol Scout",
+            x: 400,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "What’s that over the dune? Stop right there!", action: "end" },
+                { text: "You're lost, aren’t you? This desert has buried stronger than you.", action: "continue" }
+            ]
+        }
+    ],
+    4: [  // Chapter 4: Reaching Mongolia
+        {
+            name: "Mongolian Border Official",
+            x: 250,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "Papers? Where are your papers?", action: "end" },
+                { text: "South Korean embassy is that way. Hurry.", action: "continue" }
+            ]
+        },
+        {
+            name: "South Korean Diplomat / Resettlement Officer",
+            x: 400,
+            y: canvas.height - displayHeight - 10,
+            options: [
+                { text: "You’re safe now. Welcome to freedom.", action: "continue" },
+                { text: "We’ll take care of you from here on.", action: "continue" }
+            ]
+        }
+    ]
+};
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
 
 function loadChapter(chapter) {
     const chapterData = [
         {
             bg: "#002244",
             title: "❄ Chapter 1: Escape Across the Frozen River",
-            text: `The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River.
-            Behind them, the familiar shadows of home; ahead, a frozen no-man’s land. Guards patrol nearby, their boots crunching on snow.
-            Every crack of ice feels like a gunshot in the silence. Yeonmi grips her mother’s hand, her heart racing — they have only one chance.`,
-            info: `<ul>
-                <li>The Yalu River is about 800 km long and serves as a natural border between North Korea and China.</li>
-                <li>Many defectors cross at night to avoid detection, often without guides or proper equipment.</li>
-                <li>Falling into the freezing water can mean hypothermia or death within minutes.</li>
-            </ul>`
+            text: `The bitter wind slices through their clothes as Yeonmi and her mother creep toward the Yalu River. Guards patrol nearby...`,
+            info: `<ul><li>The Yalu River is about 800 km long...</li></ul>`
         },
         {
             bg: "#333300",
             title: "🏚 Chapter 2: Hiding in China",
-            text: `Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper.
-            Outside, the streets bustle, but inside, time moves painfully slow.
-            They depend on strangers and underground helpers, each knock on the door sending chills down their spines.`,
-            info: `<ul>
-                <li>China classifies North Koreans as “economic migrants” rather than refugees.</li>
-                <li>Many defectors are forced into human trafficking or forced labor to survive.</li>
-                <li>NGOs and underground networks are vital to helping defectors hide and move safely.</li>
-            </ul>`
+            text: `Hidden in an unfamiliar house, Yeonmi and her mother barely dare to whisper. Outside, the streets bustle, but inside...`,
+            info: `<ul><li>China classifies North Koreans as “economic migrants”...</li></ul>`
         },
         {
             bg: "#663300",
             title: "🏜 Chapter 3: Crossing the Gobi Desert",
-            text: `A vast sea of sand and frost stretches before them.
-            The Gobi Desert shows no mercy — freezing nights, endless horizon.
-            With every step, Yeonmi recalls the guide’s words: "Keep moving, no matter what."`,
-            info: `<ul>
-                <li>The Gobi Desert spans 1.3 million km² across China and Mongolia.</li>
-                <li>Defectors often walk on foot, enduring brutal cold and heat.</li>
-                <li>Temperatures can drop to -40°C in winter — survival depends on endurance and luck.</li>
-            </ul>`
+            text: `A vast sea of sand and frost stretches before them...`,
+            info: `<ul><li>The Gobi Desert spans 1.3 million km²...</li></ul>`
         },
         {
             bg: "#336600",
             title: "🏁 Chapter 4: Reaching Mongolia",
-            text: `Beyond the final fence lies Mongolia — and the promise of freedom.
-            At the border post, every passport stamp feels like an eternity.
-            As the gates open, Yeonmi’s mother squeezes her hand: this is it.`,
-            info: `<ul>
-                <li>Mongolia cooperates with South Korea and the UN to assist North Korean defectors.</li>
-                <li>Defectors are flown to Seoul for resettlement programs after processing.</li>
-                <li>They face years of adjustment, learning language, culture, and rebuilding lives.</li>
-            </ul>`
+            text: `Beyond the final fence lies Mongolia — and the promise of freedom.`,
+            info: `<ul><li>Mongolia cooperates with South Korea and the UN...</li></ul>`
         }
     ];
 
@@ -153,15 +205,15 @@ function update() {
     let moved = false;
     if (keys["ArrowLeft"]) {
         players.forEach(p => p.x -= p.speed);
-        direction = 2;  // Left (third row)
+        direction = 2;
         moved = true;
     }
     if (keys["ArrowRight"]) {
         players.forEach(p => p.x += p.speed);
-        direction = 1;  // Right (second row)
+        direction = 1;
         moved = true;
     }
-    if (!moved) direction = 0;  // Idle (first row)
+    if (!moved) direction = 0;
 
     players.forEach((p, index) => {
         p.x = Math.max(0, Math.min(canvas.width - displayWidth, p.x));
@@ -188,16 +240,6 @@ function update() {
         }
     }
 
-    if (moved) {
-        frameTimer++;
-        if (frameTimer >= frameSpeed) {
-            frameTimer = 0;
-            frameIndex = (frameIndex + 1) % frameCount;
-        }
-    } else {
-        frameIndex = 1; // Idle
-    }
-
     snowflakes.forEach(snow => {
         snow.y += snow.speed;
         if (snow.y > canvas.height) {
@@ -205,60 +247,82 @@ function update() {
             snow.x = Math.random() * canvas.width;
         }
     });
+
+    checkNPCInteraction();
+    if (isNearNPC) {
+        showDialogue();
+    }
 }
 
 function draw() {
-    if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
-        ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.fillStyle = chapterBackground;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    if (currentChapter === 1 || currentChapter === 3) {
-        ctx.fillStyle = "#fff";
-        snowflakes.forEach(snow => {
-            ctx.beginPath();
-            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    }
+    ctx.fillStyle = chapterBackground;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     players.forEach(p => {
-        // Adjust y position to move characters higher or lower
-        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
-
-        // Draw the character with adjusted y position
-        ctx.drawImage(
-            p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Direction: idle, right, or left
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y + yOffset,  // Apply the vertical offset here
-            displayWidth,
-            displayHeight
-        );
+        ctx.drawImage(p.sprite, frameIndex * spriteWidth, direction * spriteHeight, spriteWidth, spriteHeight, p.x, p.y, displayWidth, displayHeight);
     });
 
-    if (currentChapter === 2 && isHiding) {
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#fff";
-        ctx.font = "20px Arial";
-        ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
-    }
+    drawNPCs();
+}
 
-    if (currentChapter === 3) {
-        ctx.fillStyle = "#444";
-        ctx.fillRect(20, 20, 200, 20);
-        ctx.fillStyle = "#0f0";
-        ctx.fillRect(20, 20, 200 * (stamina / maxStamina), 20);
-        ctx.strokeStyle = "#fff";
-        ctx.strokeRect(20, 20, 200, 20);
+function drawNPCs() {
+    npcData[currentChapter].forEach(npc => {
+        ctx.fillStyle = "#ff0000";  // NPC's location marker color
+        ctx.beginPath();
+        ctx.arc(npc.x, npc.y, 15, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+function checkNPCInteraction() {
+    npcData[currentChapter].forEach(npc => {
+        const distance = Math.hypot(players[0].x - npc.x, players[0].y - npc.y);
+        if (distance < 50) {
+            isNearNPC = true;
+            currentNPC = npc;
+        }
+    });
+}
+
+function showDialogue() {
+    ctx.fillStyle = "#fff";
+    ctx.font = "20px Arial";
+    ctx.fillText(currentNPC.name + " says:", canvas.width / 2 - 50, 30);
+    
+    currentNPC.options.forEach((option, index) => {
+        ctx.fillText(`${index + 1}. ${option.text}`, canvas.width / 2 - 150, 60 + index * 30);
+    });
+}
+
+function handleChoice(choice) {
+    const action = currentNPC.options[choice].action;
+    if (action === "end") {
+        alert("Game Over! The journey ends here.");
+        resetGame();
+    } else if (action === "continue") {
+        alert("The story continues...");
+        loadNextChapter();
     }
 }
 
+function resetGame() {
+    currentChapter = 1;
+    players[0].x = 70;
+    players[1].x = 140;
+    stamina = maxStamina;
+}
+
+function loadNextChapter() {
+    currentChapter++;
+    loadChapter(currentChapter);
+}
+
+document.addEventListener("keydown", e => {
+    if (isNearNPC && e.key === "1") {
+        handleChoice(0);
+    } else if (isNearNPC && e.key === "2") {
+        handleChoice(1);
+    }
+});
 
 gameLoop();
