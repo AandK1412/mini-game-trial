@@ -51,6 +51,10 @@ const npcPositions = [
     { x: 500, y: groundY, sprite: motherSprite, dialogue: "This is just the beginning, the desert awaits us." }
 ];
 
+let selectedOption = null; // To store the option selected by the player (Stop or Let them pass)
+let isOptionSelected = false; // To check if an option has been selected
+let gameEnded = false; // To check if the game has ended
+
 const snowflakes = Array.from({ length: 50 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -132,6 +136,8 @@ function gameLoop() {
 }
 
 function update() {
+    if (gameEnded) return;  // Stop the game loop if the game has ended
+
     let moved = false;
     if (keys["ArrowLeft"]) {
         players.forEach(p => p.x -= p.speed);
@@ -152,19 +158,24 @@ function update() {
         }
     });
 
-    // Interact with NPCs
+    // Check for proximity and trigger dialogue if near NPC
     npcPositions.forEach(npc => {
-        if (Math.abs(players[0].x - npc.x) < 50 && keys["Enter"]) {
-            alert(npc.dialogue);  // Display NPC dialogue
+        if (Math.abs(players[0].x - npc.x) < 50 && !isOptionSelected) {
+            displayDialogue(npc.dialogue);  // Show the dialogue options
+            isOptionSelected = true;
         }
     });
 
-    if (players[0].x + displayWidth >= canvas.width - 50) {
+    if (selectedOption === "Stop") {
+        gameEnded = true;  // End the game if 'Stop' is chosen
+        displayEndGame("Game Over! You stopped the NPC.");
+    } else if (selectedOption === "Pass") {
         currentChapter = currentChapter < 4 ? currentChapter + 1 : 1;
         players.forEach((p, idx) => p.x = 70 + idx * 70);
         stamina = maxStamina;
         isHiding = false;
         loadChapter(currentChapter);
+        isOptionSelected = false; // Reset option selection
     }
 
     if (currentChapter === 2 && hideCooldown > 0) hideCooldown--;
@@ -196,7 +207,47 @@ function update() {
     });
 }
 
+function displayDialogue(dialogue) {
+    // Show dialogue on the canvas or anywhere you like
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(50, canvas.height - 100, canvas.width - 100, 70);  // Background for dialogue
+    ctx.fillStyle = "#fff";
+    ctx.font = "20px Arial";
+    ctx.fillText(dialogue, 60, canvas.height - 60);  // Display text
+
+    // Show buttons for choice
+    ctx.fillStyle = "#00f";
+    ctx.fillRect(60, canvas.height - 40, 150, 30);  // Stop button
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Stop", 120, canvas.height - 20);
+
+    ctx.fillStyle = "#0f0";
+    ctx.fillRect(220, canvas.height - 40, 150, 30);  // Pass button
+    ctx.fillStyle = "#fff";
+    ctx.fillText("Let them Pass", 270, canvas.height - 20);
+
+    // Handle key press to choose options
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "S") {
+            selectedOption = "Stop";
+        }
+        if (e.key === "P") {
+            selectedOption = "Pass";
+        }
+    });
+}
+
+function displayEndGame(message) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);  // Dark overlay
+    ctx.fillStyle = "#fff";
+    ctx.font = "30px Arial";
+    ctx.fillText(message, canvas.width / 2 - 150, canvas.height / 2);
+}
+
 function draw() {
+    if (gameEnded) return;  // Stop the draw if the game has ended
+
     if (backgrounds[currentChapter]?.complete && backgrounds[currentChapter].naturalHeight !== 0) {
         ctx.drawImage(backgrounds[currentChapter], 0, 0, canvas.width, canvas.height);
     } else {
