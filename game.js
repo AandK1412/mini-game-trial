@@ -62,8 +62,8 @@ let chapterBackground = "#002244";
 const groundY = canvas.height - displayHeight - 10;
 
 const players = [
-    { x: 70, y: groundY, speed: 2, sprite: girlSprite },
-    { x: 140, y: groundY, speed: 2, sprite: motherSprite }
+    { x: 100, y: groundY, speed: 2, sprite: girlSprite },
+    { x: 150, y: groundY, speed: 2, sprite: motherSprite }
 ];
 
 // Set NPCs based on the chapter
