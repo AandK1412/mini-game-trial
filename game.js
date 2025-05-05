@@ -19,12 +19,12 @@ backgrounds[4].src = "assets/chapter4.png";
 
 // Create unique variables for each NPC sprite
 const girlSprite = new Image();
-girlSprite.src = "assets/girl-sprite.png"; // Player sprite with animation
+girlSprite.src = "assets/girl-sprite.png";
 
 const motherSprite = new Image();
-motherSprite.src = "assets/mother-sprite.png"; // Player sprite with animation
+motherSprite.src = "assets/mother-sprite.png";
 
-// NPC sprites (static, no animation)
+// NPC sprites
 const BorderguardSprite = new Image();
 BorderguardSprite.src = "assets/Borderguard.png";
 
@@ -44,12 +44,17 @@ const MongolianOfficialSprite = new Image();
 MongolianOfficialSprite.src = "assets/MongolianOfficial.png";
 
 // Adjusted sprite sizes to better fit
-const spriteWidth = 40;  // Increased width for characters
-const spriteHeight = 40; // Increased height for characters
+const spriteWidth = 40;  // Increased width
+const spriteHeight = 40; // Increased height
 const scale = 2;
 const displayWidth = spriteWidth * scale;
 const displayHeight = spriteHeight * scale;
 
+let frameIndex = 0;
+const frameCount = 3;
+let frameTimer = 0;
+const frameSpeed = 10;
+let direction = 0;  // 0 = Idle, 1 = Right, 2 = Left
 let currentChapter = 1;
 let chapterBackground = "#002244";
 
@@ -247,11 +252,11 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Draw player characters with animation
     players.forEach(p => {
-        const yOffset = -10; // Negative values move the character higher
+        // Adjust y position to move characters higher or lower
+        const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
 
-        // Draw the player character with animation (idle, left, or right)
+        // Draw the character with adjusted y position
         ctx.drawImage(
             p.sprite,
             frameIndex * spriteWidth,
@@ -265,7 +270,6 @@ function draw() {
         );
     });
 
-    // Draw NPCs (static sprites, no animation)
     npcPositions.forEach(npc => {
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
