@@ -17,22 +17,23 @@ backgrounds[2].src = "assets/chapter2.png";
 backgrounds[3].src = "assets/chapter3.png";
 backgrounds[4].src = "assets/chapter4.png";
 
+// Load sprites for each NPC
 const girlSprite = new Image();
 girlSprite.src = "assets/girl-sprite.png";
 const motherSprite = new Image();
 motherSprite.src = "assets/mother-sprite.png";
+
+// Other NPCs
 const Borderguard = new Image();
-girlSprite.src = "assets/Borderguard.png";
+Borderguard.src = "assets/Borderguard.png";
 const host = new Image();
-motherSprite.src = "assets/host.png";
-const humantraffick = new Image();
-motherSprite.src = "assets/humantraffick.png";
-const NGO = new Image();
-motherSprite.src = "assets/NGO.png";
-const Desertguide = new Image();
-motherSprite.src = "assets/Desertguide.png";
-const MongolianOfficial = new Image();
-motherSprite.src = "assets/MongolianOfficial.png";
+host.src = "assets/host.png";
+
+// Ensure all sprites are loaded before drawing
+girlSprite.onload = () => console.log('girlSprite loaded');
+motherSprite.onload = () => console.log('motherSprite loaded');
+Borderguard.onload = () => console.log('Borderguard sprite loaded');
+host.onload = () => console.log('host sprite loaded');
 
 // Adjusted sprite sizes to better fit
 const spriteWidth = 40;  // Increased width
@@ -59,8 +60,8 @@ const players = [
 
 // NPC positions for interaction
 const npcPositions = [
-    { x: 300, y: groundY, sprite: motherSprite, dialogue: "Welcome to the frozen river. We must hurry." },
-    { x: 500, y: groundY, sprite: motherSprite, dialogue: "This is just the beginning, the desert awaits us." }
+    { x: 300, y: groundY, sprite: Borderguard, dialogue: "Stop! Where are you going?" },
+    { x: 500, y: groundY, sprite: host, dialogue: "Welcome to my house. You must stay hidden." }
 ];
 
 const snowflakes = Array.from({ length: 50 }, () => ({
@@ -181,14 +182,6 @@ function update() {
 
     if (currentChapter === 2 && hideCooldown > 0) hideCooldown--;
 
-    if (currentChapter === 3) {
-        if (keys["ArrowRight"] || keys["ArrowLeft"]) {
-            stamina = Math.max(0, stamina - staminaDepletionRate);
-        } else {
-            stamina = Math.min(maxStamina, stamina + staminaRegenRate);
-        }
-    }
-
     if (moved) {
         frameTimer++;
         if (frameTimer >= frameSpeed) {
@@ -225,15 +218,6 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    if (currentChapter === 1 || currentChapter === 3) {
-        ctx.fillStyle = "#fff";
-        snowflakes.forEach(snow => {
-            ctx.beginPath();
-            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    }
-
     players.forEach(p => {
         // Adjust y position to move characters higher or lower
         const yOffset = -10; // Negative values move the character higher, e.g., -10 for higher
@@ -255,23 +239,6 @@ function draw() {
     npcPositions.forEach(npc => {
         ctx.drawImage(npc.sprite, 0, 0, spriteWidth, spriteHeight, npc.x, npc.y, displayWidth, displayHeight);
     });
-
-    if (currentChapter === 2 && isHiding) {
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#fff";
-        ctx.font = "20px Arial";
-        ctx.fillText("Hiding...", canvas.width / 2 - 40, canvas.height / 2);
-    }
-
-    if (currentChapter === 3) {
-        ctx.fillStyle = "#444";
-        ctx.fillRect(20, 20, 200, 20);
-        ctx.fillStyle = "#0f0";
-        ctx.fillRect(20, 20, 200 * (stamina / maxStamina), 20);
-        ctx.strokeStyle = "#fff";
-        ctx.strokeRect(20, 20, 200, 20);
-    }
 }
 
 gameLoop();
