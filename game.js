@@ -225,21 +225,24 @@ function update() {
         }
     
         players.forEach(p => {
-        // Adjust y position to move characters higher or lower
-        const yOffset = -5; // Negative values move the character higher
-        
+        // Adjust y position to move characters higher or lower (adjust as needed)
+        const yOffset = -10; // Negative values move the character higher
     
-        // Draw the character with adjusted y position
+        // Ensure the sprite is correctly cropped based on frame width and height
+        const frameX = frameIndex * spriteWidth; // Horizontal position for the current frame
+        const frameY = direction * spriteHeight; // Vertical position (depends on direction: idle, right, or left)
+    
+        // Draw the sprite correctly without cropping
         ctx.drawImage(
             p.sprite,
-            frameIndex * spriteWidth,
-            direction * spriteHeight,  // Direction: idle, right, or left
-            spriteWidth,
-            spriteHeight,
-            p.x,
-            p.y + yOffset,  // Apply the vertical offset here
-            displayWidth,
-            displayHeight
+            frameX,  // X position in the sprite sheet (based on frameIndex)
+            frameY,  // Y position in the sprite sheet (based on direction)
+            spriteWidth,  // Frame width
+            spriteHeight,  // Frame height
+            p.x,  // Draw position X
+            p.y + yOffset,  // Draw position Y (with offset for vertical shift)
+            displayWidth,  // Display width on the canvas
+            displayHeight  // Display height on the canvas
         );
     });
 
